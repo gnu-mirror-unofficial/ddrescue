@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15">
+<title>ddrescue - Data Recovery Tool</title>
+<meta name="keywords" content="ddrescue, GNU, free software, Linux">
+<meta name="description" content="Data Recovery Tool">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#1f00ff" alink="#ff0000" vlink="#9900dd">
+
+<a href="http://es.geocities.com/ant_diaz2001/">Go to ADD Homepage</a>.
+
+<h3>ddrescue</h3>
+
+ddrescue copies data from one file or block device (hard disk, cdrom,
+etc) to another, trying hard to rescue data in case of read errors.
+<p>
+ddrescue does not truncate the output file if not asked to. So, everytime
+you run it on the same output file, it tries to fill in the gaps.
+<p>
+If you have two or more copies of a damaged file, cdrom, etc, and run
+ddrescue on all of them, one at a time, with the same output file, you
+will probably obtain a complete and error-free file. This is so because
+the probability of having damaged areas at the same places on different
+input files is very low.
+<p>
+if you also use the bad blocks file feature of ddrescue, the data will
+be rescued very efficiently.
+</p>
+
+<h4>Algorithm</h4>
+
+The algorithm of ddrescue is as follows:
+<p>
+  1) Read the non-damaged part of the disk, skipping the damaged areas.<br>
+or<br>
+  1) Read a list of bad blocks (damaged areas) from a file.<br>
+<p>
+  2) Try to read the damaged areas, splitting them into smaller pieces
+     and reading the non-damaged pieces, until the hardware block size
+     is reached, or until interrupted by the user.
+<p>
+  3) Try to read the damaged hardware blocks until the specified number
+     of retries is reached, or until interrupted by the user.
+<p>
+  4) Optionally write a list of bad blocks to a file.
+</p>
+
+<h4>Examples</h4>
+
+Infinite retrying<br>
+&nbsp;&nbsp;  ddrescue --max-retries=-1 infile outfile
+<p>
+Reading from CD-ROM with physical sector size of 2048 bytes<br>
+&nbsp;&nbsp;  ddrescue --block-size=2048 /dev/cdrom outfile
+<p>
+Efficient rescue from several identical (but independent) sources<br>
+&nbsp;&nbsp;  ddrescue infile1 outfile bbfile<br>
+&nbsp;&nbsp;  ddrescue infile2 outfile bbfile<br>
+&nbsp;&nbsp;  ddrescue infile3 outfile bbfile<br>
+&nbsp;&nbsp;  ...<br>
+&nbsp;&nbsp;  (repeat until all blocks are copied to outfile (ddrescue deletes bbfile))
+<p>
+Complex rescue<br>
+&nbsp;&nbsp;  ddrescue infile outfile bbfile<br>
+&nbsp;&nbsp;  (edit bbfile and move the desired entries to bbfile2)<br>
+&nbsp;&nbsp;  ddrescue --max-retries=-1 infile outfile bbfile2
+</p>
+
+<h4>Download</h4>
+
+The latest version of ddrescue can be found
+<a href="http://savannah.nongnu.org/download/ddrescue/">here</a>.
+
+<h4>How to Help</h4>
+
+To contact the author, either to report a bug or to contribute
+fixes or improvements, send mail to
+<a href="mailto:ant_diaz@teleline.es"><em>ant_diaz@teleline.es</em></a>.
+Please send messages as plain text. If posting patches they should be in
+unified diff format against the latest version.  They should include a text
+description and the unified diff inline in the message and not attached to
+it.
+<p>
+<a href="http://validator.w3.org/check?uri=referer"><img border="0"
+         src="http://www.w3.org/Icons/valid-html401"
+         alt="Valid HTML 4.01!" height="31" width="88"></a>
+</p>
+<hr>
+Updated: 2004/09/29
+</body>
+</html>
