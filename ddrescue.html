@@ -19,36 +19,48 @@ etc) to another, trying hard to rescue data in case of read errors.
 ddrescue does not truncate the output file if not asked to. So, everytime
 you run it on the same output file, it tries to fill in the gaps.
 <p>
-If you have two or more copies of a damaged file, cdrom, etc, and run
-ddrescue on all of them, one at a time, with the same output file, you
-will probably obtain a complete and error-free file. This is so because
-the probability of having damaged areas at the same places on different
-input files is very low.
+The basic operation of ddrescue is fully automatic. That is, you don't
+have to wait for an error, stop the program, read the log, run it in
+reverse mode, etc.
 <p>
-if you also use the bad blocks file feature of ddrescue, the data will
-be rescued very efficiently.
+Automatic merging of backups: If you have two or more damaged copies of a
+file, cdrom, etc, and run ddrescue on all of them, one at a time, with the
+same output file, you will probably obtain a complete and error-free file.
+This is so because the probability of having damaged areas at the same
+places on different input files is very low.
+<p>
+If you use the bad blocks file feature of ddrescue, the data will be
+rescued very efficiently. Also you can interrupt the rescue at any time
+and resume it later at the same point.
 </p>
 
 <h4>Algorithm</h4>
 
 The algorithm of ddrescue is as follows:
 <p>
-  1) Read the non-damaged part of the disk, skipping the damaged areas.<br>
-or<br>
-  1) Read a list of bad blocks (damaged areas) from a file.<br>
+  1) Optionally read a starting point, a size and a list of bad blocks
+     (damaged areas) from a file, for resuming a previously interrupted
+     rescue.
 <p>
-  2) Try to read the damaged areas, splitting them into smaller pieces
+  2) Read the non-damaged part of the disk, skipping the damaged areas,
+     until the requested size is reached, or until interrupted by the user.
+<p>
+  3) Try to read the damaged areas, splitting them into smaller pieces
      and reading the non-damaged pieces, until the hardware block size
      is reached, or until interrupted by the user.
 <p>
-  3) Try to read the damaged hardware blocks until the specified number
+  4) Try to read the damaged hardware blocks until the specified number
      of retries is reached, or until interrupted by the user.
 <p>
-  4) Optionally write a list of bad blocks to a file.
+  5) Optionally write a starting point, a size and a list of bad blocks
+     to a file for later use.
 </p>
 
 <h4>Examples</h4>
 
+Fast rescue of non-damaged part of file<br>
+&nbsp;&nbsp;  ddrescue --no-split infile outfile
+<p>
 Infinite retrying<br>
 &nbsp;&nbsp;  ddrescue --max-retries=-1 infile outfile
 <p>
@@ -88,6 +100,6 @@ it.
          alt="Valid HTML 4.01!" height="31" width="88"></a>
 </p>
 <hr>
-Updated: 2004/09/29
+Updated: 2004/12/14
 </body>
 </html>
