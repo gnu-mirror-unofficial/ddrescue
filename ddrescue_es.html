@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Ddrescue - GNU Project - Free Software Foundation (FSF)</title>
+<link rev="made" href="mailto:webmasters@www.gnu.org">
+<meta name="keywords" content="ddrescue, data recovery, GNU, FSF, software libre, Linux">
+<meta name="description" content="Herramienta de recuperación de datos">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#1f00ff" alink="#ff0000" vlink="#9900dd">
+
+<h3>Ddrescue - Herramienta de recuperación de datos</h3>
+<a href="/graphics/agnuhead.html"><img src="/graphics/gnu-head-sm.jpg"
+ alt=" [imagen de la cabeza de un ñu (GNU)] " width="129" height="122"></a>
+
+[ <a href="http://www.gnu.org/software/ddrescue/ddrescue.html">Inglés</a>
+| <a href="http://www.gnu.org/software/ddrescue/ddrescue_es.html">Español</a> ]
+
+<h4>Introducción</h4>
+
+GNU ddrescue es una herramienta de recuperación de datos. Copia los
+datos de un fichero o un dispositivo de bloques (disco duro, cdrom,
+etc) a otro, intentando recuperar los datos en caso de producirse
+errores de lectura.
+<p>
+Ddrescue no trunca el fichero de salida si no se le pide. De este modo
+cada vez que es ejecutado sobre el mismo fichero de salida, intenta
+rellenar los huecos.
+<p>
+La operación básica de ddrescue es totalmente automática. Es decir, no
+es necesario esperar a que se produzca un error, parar el programa,
+leer las anotaciones, ejecutarlo en modo inverso, etc.
+<p>
+Si se usa el fichero de anotaciones (logfile) de ddrescue, los datos
+son recuperados muy eficientemente. Además se puede interrumpir el
+rescate en cualquier momento y reanudarlo después en el mismo punto.
+<p>
+Combinación automática de copias de seguridad: Si se tienen dos o más
+copias dañadas de un mismo fichero, cdrom, etc, y se ejecuta ddrescue
+en todas ellas, una cada vez, sobre el mismo fichero de salida, se
+obtendrá probablemente un fichero completo y libre de errores. Esto es
+así porque la probabilidad de que existan áreas dañadas en los mismos
+lugares de diferentes ficheros de entrada es muy baja. Usando el
+fichero de anotaciones (logfile), sólo se intentan leer los bloques que
+se necesiten de la segunda copia y sucesivas.
+</p>
+
+<h4>Documentación</h4>
+
+El manual está disponible en el <em>sistema info</em> del <em>Sistema
+Operativo GNU</em>. Emplea el comando <em>info</em> para acceder al
+directorio del sistema info. Emplea <em>info ddrescue</em> para acceder
+directamente a la sección de ddrescue.
+
+
+<h4>Descargando (Downloading) ddrescue</h4>
+
+Las versiones publicadas de GNU ddrescue se pueden encontrar en el
+subdirectorio <code>/gnu/ddrescue/</code> en tu
+<a href="http://www.gnu.org/prep/ftp.html">espejo GNU</a> preferido.
+Para ver otras formas de obtener ddrescue, consulta
+<a href="http://www.gnu.org/software/software.html#HowToGetSoftware">Cómo
+conseguir Software GNU</a>. La última versión publicada será la versión
+más reciente disponible en <a href="http://ftp.gnu.org/gnu/ddrescue/">
+http://ftp.gnu.org/gnu/ddrescue/</a>.
+<p>
+Puedes encontrar versiones antiguas (y a veces la última versión, si
+ftp.gnu.org se retrasa por alguna razón) en
+<a href="http://savannah.gnu.org/download/ddrescue/">
+http://savannah.gnu.org/download/ddrescue/</a>.
+<p>
+Puedes encontrar (si las hay) versiones alfa para probar en el servidor de
+versiones alfa. Usamos un servidor diferente para las versiones alfa para que
+la gente no confunda versiones de prueba con versiones estables. Las
+versiones de prueba están disponibles en <a href="ftp://alpha.gnu.org/gnu/ddrescue/">
+ftp://alpha.gnu.org/gnu/ddrescue/</a>.
+</p>
+
+<h4>Cómo Conseguir Ayuda</h4>
+
+Para informar sobre errores (bugs) en ddrescue, la lista de correo
+<a href="mailto:bug-ddrescue@gnu.org"><em>bug-ddrescue@gnu.org</em></a> es el
+lugar más adecuado. Por favor, envía los mensajes como texto llano. No
+envies HTML, base64 MIME ni múltiples formatos. Incluye una linea
+descriptiva en el asunto (subject) del mensaje. Si todos los asuntos son
+"error en ddrescue" es imposible diferenciarlos.
+<p>
+Un archivo de la lista de correo está disponible en
+<a href="http://lists.gnu.org/mailman/listinfo/bug-ddrescue">
+<em>http://lists.gnu.org/mailman/listinfo/bug-ddrescue</em></a>.
+</p>
+
+<h4>Cómo Ayudar</h4>
+
+Para contactar con los mantenedores, tanto para informar sobre un error
+(bug) como para contribuir soluciones o mejoras, envía un mensaje a
+<a href="mailto:bug-ddrescue@gnu.org"><em>bug-ddrescue@gnu.org</em></a>.
+Por favor, envía los mensajes como texto llano. Si envías parches, hazlo en
+formato diff unificado (diff -u) sobre la última versión alfa. Incluye la
+descripción del problema y el resultado de diff en el mensaje y no como
+fichero adjunto.
+
+
+<hr>
+Volver a la <a href="http://www.gnu.org/home.html">página principal de GNU</a>.
+<p>
+Por favor, envía consultas y preguntas sobre la FSF y GNU a
+<a href="mailto:gnu@gnu.org"><em>gnu@gnu.org</em></a>. Hay también
+<a href="http://www.gnu.org/home.html#ContactInfo">otras formas de contactar</a>
+con la FSF.
+<p>
+Por favor, envía tus comentarios sobre esta página a
+<a href="mailto:bug-ddrescue@gnu.org"><em>bug-ddrescue@gnu.org</em></a>,
+envía tus comentarios sobre las páginas de www.gnu.org en general a
+<a href="mailto:webmasters@www.gnu.org"><em>webmasters@www.gnu.org</em></a>,
+envía las demás cuestiones a
+<a href="mailto:gnu@gnu.org"><em>gnu@gnu.org</em></a>.
+<p>
+Copyright (C) 2004 Free Software Foundation, Inc., 59 Temple Place -
+Suite 330, Boston, MA  02111,  USA
+<p>
+Se permite la copia literal y la distribución de éste artículo en su
+totalidad a través de cualquier medio, siempre que se mantenga esta nota.
+<p>
+Updated: $Date: 2005/02/13 19:53:02 $ $Author: antonio $
+</p>
+<hr>
+</body>
+</html>
