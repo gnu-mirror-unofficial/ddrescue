@@ -1,27 +1,31 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15">
-<title>ddrescue - Data Recovery Tool</title>
-<meta name="keywords" content="ddrescue, GNU, free software, Linux">
-<meta name="description" content="Data Recovery Tool">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Ddrescue - GNU Project - Free Software Foundation (FSF)</title>
+<link rev="made" href="mailto:webmasters@www.gnu.org">
+<meta name="keywords" content="ddrescue, data recovery, GNU, FSF, free software, Linux">
+<meta name="description" content="Data recovery tool">
 </head>
 
 <body bgcolor="#ffffff" text="#000000" link="#1f00ff" alink="#ff0000" vlink="#9900dd">
 
-<a href="http://es.geocities.com/ant_diaz2001/">Go to ADD Homepage</a>.
+<h3>Ddrescue - Data recovery tool</h3>
+<a href="/graphics/agnuhead.html"><img src="/graphics/gnu-head-sm.jpg"
+ alt=" [image of the head of a GNU] " width="129" height="122"></a>
 
-<h3>ddrescue</h3>
+<h4>Introduction</h4>
 
-ddrescue copies data from one file or block device (hard disk, cdrom,
-etc) to another, trying hard to rescue data in case of read errors.
+GNU ddrescue is a data recovery tool. It copies data from one file or block
+device (hard disc, cdrom, etc) to another, trying hard to rescue data in
+case of read errors.
 <p>
-ddrescue does not truncate the output file if not asked to. So, everytime
+Ddrescue does not truncate the output file if not asked to. So, every time
 you run it on the same output file, it tries to fill in the gaps.
 <p>
-The basic operation of ddrescue is fully automatic. That is, you don't
-have to wait for an error, stop the program, read the log, run it in
-reverse mode, etc.
+The basic operation of ddrescue is fully automatic. That is, you don't have
+to wait for an error, stop the program, read the log, run it in reverse
+mode, etc.
 <p>
 Automatic merging of backups: If you have two or more damaged copies of a
 file, cdrom, etc, and run ddrescue on all of them, one at a time, with the
@@ -29,77 +33,89 @@ same output file, you will probably obtain a complete and error-free file.
 This is so because the probability of having damaged areas at the same
 places on different input files is very low.
 <p>
-If you use the bad blocks file feature of ddrescue, the data will be
-rescued very efficiently. Also you can interrupt the rescue at any time
-and resume it later at the same point.
+If you use the logfile feature of ddrescue, the data is rescued very
+efficiently. Also you can interrupt the rescue at any time and resume it
+later at the same point.
 </p>
 
-<h4>Algorithm</h4>
+<h4>Documentation</h4>
 
-The algorithm of ddrescue is as follows:
+The manual is available in the <em>info system</em> of the <em>GNU
+Operating System</em>.  Use <em>info</em> to access the top level info
+page. Use <em>info ddrescue</em> to access the ddrescue section directly.
+
+
+<h4>Downloading</h4>
+
+Released versions of GNU ddrescue can be found in the subdirectory
+<code>/gnu/ddrescue/</code> on your favorite
+<a href="http://www.gnu.org/prep/ftp.html">GNU mirror</a>.
+For other ways to obtain ddrescue, please read
+<a href="http://www.gnu.org/software/software.html#HowToGetSoftware">How
+to get GNU Software</a>. The latest released version will be the latest
+version available here at <a href="http://ftp.gnu.org/gnu/ddrescue/">
+http://ftp.gnu.org/gnu/ddrescue/</a>.
 <p>
-  1) Optionally read a starting point, a size and a list of bad blocks
-     (damaged areas) from a file, for resuming a previously interrupted
-     rescue.
+Old versions (and sometimes the latest version if upload to
+<a href="http://ftp.gnu.org/">http://ftp.gnu.org/</a>
+gets delayed for some reason) can be found at
+<a href="http://savannah.gnu.org/download/ddrescue/">
+http://savannah.gnu.org/download/ddrescue/</a>.
 <p>
-  2) Read the non-damaged part of the disk, skipping the damaged areas,
-     until the requested size is reached, or until interrupted by the user.
-<p>
-  3) Try to read the damaged areas, splitting them into smaller pieces
-     and reading the non-damaged pieces, until the hardware block size
-     is reached, or until interrupted by the user.
-<p>
-  4) Try to read the damaged hardware blocks until the specified number
-     of retries is reached, or until interrupted by the user.
-<p>
-  5) Optionally write a starting point, a size and a list of bad blocks
-     to a file for later use.
+Testing versions of alpha releases can be found on the alpha release
+server. A different server is used for alpha releases so that people do
+not confuse testing snapshots and released versions. Alpha test versions
+are available at <a href="ftp://alpha.gnu.org/gnu/ddrescue/">
+ftp://alpha.gnu.org/gnu/ddrescue/</a>.
 </p>
 
-<h4>Examples</h4>
+<h4>How to Get Help</h4>
 
-Fast rescue of non-damaged part of file<br>
-&nbsp;&nbsp;  ddrescue --no-split infile outfile
+For general discussion of bugs in ddrescue the mailing list <a
+href="mailto:bug-ddrescue@gnu.org"><em>bug-ddrescue@gnu.org</em></a> is the
+most appropriate forum. Please send messages as plain text. Please do not
+send messages encoded as HTML nor encoded as base64 MIME nor included as
+multiple formats. Please include a descriptive subject line. If all of the
+subject are "bug in ddrescue" it is impossible to differentiate them.
 <p>
-Infinite retrying<br>
-&nbsp;&nbsp;  ddrescue --max-retries=-1 infile outfile
-<p>
-Reading from CD-ROM with physical sector size of 2048 bytes<br>
-&nbsp;&nbsp;  ddrescue --block-size=2048 /dev/cdrom outfile
-<p>
-Efficient rescue from several identical (but independent) sources<br>
-&nbsp;&nbsp;  ddrescue infile1 outfile bbfile<br>
-&nbsp;&nbsp;  ddrescue infile2 outfile bbfile<br>
-&nbsp;&nbsp;  ddrescue infile3 outfile bbfile<br>
-&nbsp;&nbsp;  ...<br>
-&nbsp;&nbsp;  (repeat until all blocks are copied to outfile (ddrescue deletes bbfile))
-<p>
-Complex rescue<br>
-&nbsp;&nbsp;  ddrescue infile outfile bbfile<br>
-&nbsp;&nbsp;  (edit bbfile and move the desired entries to bbfile2)<br>
-&nbsp;&nbsp;  ddrescue --max-retries=-1 infile outfile bbfile2
+An archive of the bug report mailing list is available at
+<a href="http://lists.gnu.org/mailman/listinfo/bug-ddrescue">
+<em>http://lists.gnu.org/mailman/listinfo/bug-ddrescue</em></a>.
 </p>
-
-<h4>Download</h4>
-
-The latest version of ddrescue can be found
-<a href="http://savannah.nongnu.org/download/ddrescue/">here</a>.
 
 <h4>How to Help</h4>
 
-To contact the author, either to report a bug or to contribute
+To contact the maintainers, either to report a bug or to contribute
 fixes or improvements, send mail to
-<a href="mailto:ant_diaz@teleline.es"><em>ant_diaz@teleline.es</em></a>.
-Please send messages as plain text. If posting patches they should be in
-unified diff format against the latest version.  They should include a text
-description and the unified diff inline in the message and not attached to
-it.
+<a href="mailto:bug-ddrescue@gnu.org"><em>bug-ddrescue@gnu.org</em></a>.
+Please send messages as plain text. If posting patches they should be
+in unified diff format against the latest alpha testing version.  They
+should include a text description and the unified diff inline in the
+message and not attached to it.
+
+
+<hr>
+Return to <a href="http://www.gnu.org/home.html">GNU's home page</a>.
 <p>
-<a href="http://validator.w3.org/check?uri=referer"><img border="0"
-         src="http://www.w3.org/Icons/valid-html401"
-         alt="Valid HTML 4.01!" height="31" width="88"></a>
+Please send FSF &amp; GNU inquiries &amp; questions to
+<a href="mailto:gnu@gnu.org"><em>gnu@gnu.org</em></a>. There are also
+<a href="http://www.gnu.org/home.html#ContactInfo">other ways to contact</a>
+the FSF.
+<p>
+Please send comments on this particular web page to
+<a href="mailto:bug-ddrescue@gnu.org"><em>bug-ddrescue@gnu.org</em></a>,
+send comments about www.gnu.org web pages in general to
+<a href="mailto:webmasters@www.gnu.org"><em>webmasters@www.gnu.org</em></a>,
+send other questions to <a href="mailto:gnu@gnu.org"><em>gnu@gnu.org</em></a>.
+<p>
+Copyright (C) 2004 Free Software Foundation, Inc., 59 Temple Place -
+Suite 330, Boston, MA  02111,  USA
+<p>
+Verbatim copying and distribution of this entire article is
+permitted in any medium, provided this notice is preserved.
+<p>
+Updated: $Date: 2004/12/23 11:37:08 $ $Author: antonio $
 </p>
 <hr>
-Updated: 2004/12/14
 </body>
 </html>
