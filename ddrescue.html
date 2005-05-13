@@ -41,6 +41,13 @@ error-free file. This is so because the probability of having damaged
 areas at the same places on different input files is very low. Using
 the logfile, only the needed blocks are read from the second and
 successive copies.
+<p>
+The logfile is periodically saved to disc. So in case of a crash you can
+resume the rescue with little recopying.
+<p>
+Also, the same logfile can be used for multiple commands that copy
+different areas of the file, and for multiple recovery attempts over
+different subsets.
 </p>
 
 <h4>Documentation</h4>
@@ -113,13 +120,13 @@ send comments about www.gnu.org web pages in general to
 <a href="mailto:webmasters@www.gnu.org"><em>webmasters@www.gnu.org</em></a>,
 send other questions to <a href="mailto:gnu@gnu.org"><em>gnu@gnu.org</em></a>.
 <p>
-Copyright (C) 2004 Free Software Foundation, Inc., 59 Temple Place -
-Suite 330, Boston, MA  02111,  USA
+Copyright (C) 2005 Free Software Foundation, Inc., 51 Franklin St, Fifth
+Floor, Boston, MA 02110-1301 USA
 <p>
 Verbatim copying and distribution of this entire article is
 permitted in any medium, provided this notice is preserved.
 <p>
-Updated: $Date: 2005/02/13 19:53:02 $ $Author: antonio $
+Updated: $Date: 2005/05/13 15:49:31 $ $Author: antonio $
 </p>
 <hr>
 </body>

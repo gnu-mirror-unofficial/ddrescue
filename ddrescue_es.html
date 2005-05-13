@@ -44,6 +44,13 @@ así porque la probabilidad de que existan áreas dañadas en los mismos
 lugares de diferentes ficheros de entrada es muy baja. Usando el
 fichero de anotaciones (logfile), sólo se intentan leer los bloques que
 se necesiten de la segunda copia y sucesivas.
+<p>
+El logfile es salvado periódicamente en disco. De modo que en caso de
+bloqueo puede reanudarse el rescate sin apenas recopiado.
+<p>
+También el mismo logfile puede ser usado por múltiples comandos que copian
+diferentes areas del fichero, y por múltiples intentos de rescate sobre
+diferentes subconjuntos de una misma área.
 </p>
 
 <h4>Documentación</h4>
@@ -117,13 +124,13 @@ envía tus comentarios sobre las páginas de www.gnu.org en general a
 envía las demás cuestiones a
 <a href="mailto:gnu@gnu.org"><em>gnu@gnu.org</em></a>.
 <p>
-Copyright (C) 2004 Free Software Foundation, Inc., 59 Temple Place -
-Suite 330, Boston, MA  02111,  USA
+Copyright (C) 2005 Free Software Foundation, Inc., 51 Franklin St, Fifth
+Floor, Boston, MA 02110-1301 USA
 <p>
 Se permite la copia literal y la distribución de éste artículo en su
 totalidad a través de cualquier medio, siempre que se mantenga esta nota.
 <p>
-Updated: $Date: 2005/02/13 19:53:02 $ $Author: antonio $
+Updated: $Date: 2005/05/13 15:49:32 $ $Author: antonio $
 </p>
 <hr>
 </body>
