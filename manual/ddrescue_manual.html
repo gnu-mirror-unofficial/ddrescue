@@ -1,8 +1,8 @@
 <html lang="en">
 <head>
-<title>GNU ddrescue</title>
+<title>GNU ddrescue Manual</title>
 <meta http-equiv="Content-Type" content="text/html">
-<meta name="description" content="GNU ddrescue">
+<meta name="description" content="GNU ddrescue Manual">
 <meta name="generator" content="makeinfo 4.8">
 <link title="Top" rel="top" href="#Top">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
@@ -20,11 +20,11 @@
 --></style>
 </head>
 <body>
-<h1 class="settitle">GNU ddrescue</h1>
+<h1 class="settitle">GNU ddrescue Manual</h1>
 <div class="contents">
 <h2>Table of Contents</h2>
 <ul>
-<li><a name="toc_Top" href="#Top">GNU ddrescue</a>
+<li><a name="toc_Top" href="#Top">GNU ddrescue Manual</a>
 <li><a name="toc_Introduction" href="#Introduction">1 Introduction</a>
 <li><a name="toc_Basic-concepts" href="#Basic-concepts">2 Basic concepts</a>
 <li><a name="toc_Algorithm" href="#Algorithm">3 Algorithm</a>
@@ -49,9 +49,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
 
 </div>
 
-<h2 class="unnumbered">GNU ddrescue</h2>
+<h2 class="unnumbered">GNU ddrescue Manual</h2>
 
-<p>This manual is for GNU ddrescue (version 1.11, 10 July 2009).
+<p>This manual is for GNU ddrescue (version 1.12, 6 April 2010).
 
 <ul class="menu">
 <li><a accesskey="1" href="#Introduction">Introduction</a>: 	Purpose and features of GNU ddrescue
@@ -70,7 +70,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
    <pre class="sp">
 
 </pre>
-Copyright &copy; 2004, 2005, 2006, 2007, 2008, 2009
+Copyright &copy; 2004, 2005, 2006, 2007, 2008, 2009, 2010
 Antonio Diaz Diaz.
 
    <p>This manual is free documentation: you have unlimited permission
@@ -107,6 +107,9 @@ error-free file. This is so because the probability of having damaged
 areas at the same places on different input files is very low. Using
 the logfile, only the needed blocks are read from the second and
 successive copies.
+
+   <p>Ddrescue recommends lzip for compression of backups, because of its
+reliability and data recovery capabilities.
 
    <p>Recordable CD and DVD media keep their data only for a finite time
 (typically for many years). After that time, data loss develops slowly
@@ -186,9 +189,9 @@ damaging the surface, the heads and the drive mechanics, instead of
 getting out of them as fast as possible. This behavior reduces the
 chances of rescuing the remaining good data.
 
-   <p>The algorithm of ddrescue is as follows: (the user may interrupt the
+   <p>The algorithm of ddrescue is as follows (the user may interrupt the
 process at any point, but be aware that a bad drive can block ddrescue
-for a long time until the kernel gives up)
+for a long time until the kernel gives up):
 
    <p>1) Optionally read a logfile describing the status of a multi-part or
 previously interrupted rescue. If no logfile is specified or is empty or
@@ -219,7 +222,10 @@ number of retries is reached.
    <pre class="sp">
 
 </pre>
-The logfile is periodically saved to disc, as well as when ddrescue
+Note that as ddrescue splits the failed blocks, making them smaller, the
+total error size may diminish while the number of errors increases.
+
+   <p>The logfile is periodically saved to disc, as well as when ddrescue
 finishes or is interrupted. So in case of a crash you can resume the
 rescue with little recopying.
 
@@ -335,6 +341,7 @@ this option. Note that this option specifies the size of the input data
 to be copied, not the size of the output file. So, for example, the
 following command creates an output file 300 bytes long, but only writes
 data on the last 200 bytes:
+
      <pre class="example">          ddrescue -i 100 -s 200 infile outfile logfile
      </pre>
      <br><dt>`<samp><span class="samp">--sparse</span></samp>'<dt>`<samp><span class="samp">-S</span></samp>'<dd>Use sparse writes for output file. (The blocks of zeros are not actually
@@ -424,7 +431,7 @@ is one of these:
 
 <p class="noindent">And here is an example logfile:
 
-<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.11<br>
+<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.12<br>
 # current_pos  current_status<br>
 0x00120000     ?<br>
 #      pos         size   status<br>
@@ -459,7 +466,9 @@ those things to, in order to use it safely.
 
    <p>A failing drive tends to develop more and more errors as time passes. 
 Because of this, you should rescue the data from a drive as soon as you
-notice the first error.
+notice the first error. Be diligent because every time a physicaly
+damaged drive powers up and is able to output some data, it may be the
+very last time that it ever will.
 
    <p>IMPORTANT! Always use a logfile unless you know you won't need it. 
 Without a logfile, ddrescue can't resume a rescue, only reinitiate it.
@@ -529,7 +538,17 @@ Example 3: Rescue a CD-ROM in /dev/cdrom
    <pre class="sp">
 
 </pre>
-Example 4: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hdb
+Example 4: Rescue a lzip compressed backup from two copies
+
+<pre class="example">     ddrescue copy1.tar.lz rescued.tar.lz logfile
+     ddrescue -r1 copy2.tar.lz rescued.tar.lz logfile
+     test the integrity of the rescued file with `<samp><span class="samp">lzip&nbsp;-t</span></samp>'<!-- /@w --> and use
+     `<samp><span class="samp">lziprecover</span></samp>' if needed.
+</pre>
+   <pre class="sp">
+
+</pre>
+Example 5: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hdb
 fails and you have to rescue data to a third drive, /dev/hdc
 
 <pre class="example">     ddrescue -n /dev/hda /dev/hdb logfile1     &lt;-- /dev/hdb fails here
@@ -540,7 +559,7 @@ fails and you have to rescue data to a third drive, /dev/hdc
    <pre class="sp">
 
 </pre>
-Example 5: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hda
+Example 6: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hda
 stops responding and disappears from /dev
 
 <pre class="example">     ddrescue -n /dev/hda /dev/hdb logfile      &lt;-- /dev/hda fails here

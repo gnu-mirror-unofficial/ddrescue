@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15">
 <title>Ddrescue - GNU Project - Free Software Foundation (FSF)</title>
 <link rev="made" href="mailto:webmasters@www.gnu.org">
-<meta name="keywords" content="ddrescue, data recovery, GNU, FSF, free software">
+<meta name="keywords" content="ddrescue, data recovery, lzip, GNU, FSF, free software">
 <meta name="description" content="Data recovery tool">
 </head>
 
@@ -14,8 +14,8 @@
 <a href="/graphics/agnuhead.html"><img src="/graphics/gnu-head-sm.jpg"
  alt=" [image of the head of a GNU] " width="129" height="122"></a>
 
-[ <a href="http://www.gnu.org/software/ddrescue/ddrescue.html">English</a>
-| <a href="http://www.gnu.org/software/ddrescue/ddrescue_es.html">Español</a> ]
+[ <a href="ddrescue.html">English</a>
+| <a href="ddrescue_es.html">Español</a> ]
 
 <h4>Introduction</h4>
 
@@ -39,6 +39,16 @@ areas at the same places on different input files is very low. Using
 the logfile, only the needed blocks are read from the second and
 successive copies.
 <p>
+Ddrescue recommends <a href="http://www.nongnu.org/lzip/lzip.html">lzip</a>
+for compression of backups, because of its reliability and data recovery
+capabilities.
+<p>
+Recordable CD and DVD media keep their data only for a finite time
+(typically for many years). After that time, data loss develops slowly
+with read errors growing from the outer media region towards the inside.
+Just make two (or more) copies of every important CD/DVD you burn so
+that you can later recover them with ddrescue.
+<p>
 The logfile is periodically saved to disc. So in case of a crash you can
 resume the rescue with little recopying.
 <p>
@@ -58,7 +68,7 @@ Operating System</em>. Use <em>info</em> to access the top level info
 page. Use <em>info ddrescue</em> to access the ddrescue section directly.
 <p>
 An online manual for ddrescue can be found
-<a href="http://www.gnu.org/software/ddrescue/manual/ddrescue_manual.html">here</a>.
+<a href="manual/ddrescue_manual.html">here</a>.
 
 <h4>Download</h4>
 
@@ -123,13 +133,13 @@ send comments about www.gnu.org web pages in general to
 <a href="mailto:webmasters@www.gnu.org"><em>webmasters@www.gnu.org</em></a>,
 send other questions to <a href="mailto:gnu@gnu.org"><em>gnu@gnu.org</em></a>.
 <p>
-Copyright &copy 2009 Free Software Foundation, Inc., 51 Franklin St, Fifth
+Copyright &copy 2010 Free Software Foundation, Inc., 51 Franklin St, Fifth
 Floor, Boston, MA 02110-1301 USA
 <p>
 Verbatim copying and distribution of this entire article is
 permitted in any medium, provided this notice is preserved.
 <p>
-Updated: $Date: 2009/10/06 15:40:45 $ $Author: antonio $
+Updated: $Date: 2010/04/06 16:10:04 $ $Author: antonio $
 </p>
 <hr>
 </body>
