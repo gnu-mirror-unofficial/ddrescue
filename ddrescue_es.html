@@ -24,10 +24,6 @@ datos de un fichero o un dispositivo de bloques (disco duro, cdrom,
 etc) a otro, intentando recuperar los datos en caso de producirse
 errores de lectura.
 <p>
-Ddrescue no trunca el fichero de salida si no se le pide. De este modo
-cada vez que es ejecutado sobre el mismo fichero de salida, intenta
-rellenar los huecos.
-<p>
 La operación básica de ddrescue es totalmente automática. Es decir, no
 es necesario esperar a que se produzca un error, parar el programa,
 leer las anotaciones, ejecutarlo en modo inverso, etc.
@@ -35,6 +31,11 @@ leer las anotaciones, ejecutarlo en modo inverso, etc.
 Si se usa el fichero de anotaciones (logfile) de ddrescue, los datos
 son recuperados muy eficientemente. Además se puede interrumpir el
 rescate en cualquier momento y reanudarlo después en el mismo punto.
+<p>
+Ddrescue no escribe ceros en la salida cuando encuentra errores en la
+entrada, ni trunca el fichero de salida si no se le pide. De este modo
+cada vez que es ejecutado sobre el mismo fichero de salida, intenta
+rellenar los huecos sin borrar los datos ya recuperados.
 <p>
 Combinación automática de copias de seguridad: Si se tienen dos o más
 copias dañadas de un mismo fichero, cdrom, etc, y se ejecuta ddrescue
@@ -47,19 +48,21 @@ se necesiten de la segunda copia y sucesivas.
 <p>
 Ddrescue recomienda <a href="http://www.nongnu.org/lzip/lzip.html">lzip</a>
 para comprimir las copias de seguridad, por su fiabilidad y capacidades
-de recuperación de datos.
+de recuperación de datos, incluyendo la combinación de copias con
+comprobación de errores. La combinación ddrescue + lziprecover es la
+mejor opción para recuperar datos a partir de varias copias dañadas.
 <p>
 El logfile es salvado periódicamente en disco. De modo que en caso de
 bloqueo puede reanudarse el rescate sin apenas recopiado.
 <p>
 También el mismo logfile puede ser usado por múltiples comandos que copian
-diferentes areas del fichero, y por múltiples intentos de rescate sobre
+diferentes áreas del fichero, y por múltiples intentos de rescate sobre
 diferentes subconjuntos de una misma área.
 <p>
-Ddrescue alinea su búfer de E/S al tamaño del sector de forma que pueda
-ser usado para leer de dispositivos en bruto (raw devices). Por razones
-de eficiencia, también lo alinea al tamaño de página de memoria si el
-tamaño de página es un múltiplo del tamaño de sector.
+Ddrescue también proporciona un "modo de llenado" (fill mode) capaz de
+sobreescribir selectivamente partes del fichero de salida, lo que tiene
+algunos usos interesantes como borrar datos, marcar áreas defectuosas o
+incluso, en algunos casos, "reparar" sectores dañados.
 </p>
 
 <h4>Documentación</h4>
@@ -144,7 +147,7 @@ Floor, Boston, MA 02110-1301 USA
 Se permite la copia literal y la distribución de este artículo en su
 totalidad a través de cualquier medio, siempre que se mantenga esta nota.
 <p>
-Updated: $Date: 2010/04/06 16:10:05 $ $Author: antonio $
+Updated: $Date: 2010/08/28 11:55:20 $ $Author: antonio $
 </p>
 <hr>
 </body>

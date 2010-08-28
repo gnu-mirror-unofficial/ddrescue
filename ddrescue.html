@@ -31,6 +31,11 @@ If you use the logfile feature of ddrescue, the data is rescued very
 efficiently (only the needed blocks are read). Also you can interrupt
 the rescue at any time and resume it later at the same point.
 <p>
+Ddrescue does not write zeros to the output when it finds bad sectors in
+the input, and does not truncate the output file if not asked to. So,
+every time you run it on the same output file, it tries to fill in the
+gaps without wiping out the data already rescued.
+<p>
 Automatic merging of backups: If you have two or more damaged copies of
 a file, cdrom, etc, and run ddrescue on all of them, one at a time,
 with the same output file, you will probably obtain a complete and
@@ -41,7 +46,9 @@ successive copies.
 <p>
 Ddrescue recommends <a href="http://www.nongnu.org/lzip/lzip.html">lzip</a>
 for compression of backups, because of its reliability and data recovery
-capabilities.
+capabilities, including error-checked merging of backup copies. The
+combination ddrescue + lziprecover is the best option for recovering
+data from multiple damaged copies.
 <p>
 Recordable CD and DVD media keep their data only for a finite time
 (typically for many years). After that time, data loss develops slowly
@@ -56,9 +63,10 @@ Also, the same logfile can be used for multiple commands that copy
 different areas of the file, and for multiple recovery attempts over
 different subsets.
 <p>
-Ddrescue aligns its I/O buffer to the sector size so that it can be used
-to read from raw devices. For efficiency reasons, also aligns it to the
-memory page size if page size is a multiple of sector size.
+Ddrescue also features a "fill mode" able to selectively overwrite parts
+of the output file, which has a number of interesting uses like wiping
+data, marking bad areas or even, in some cases, "repair" damaged
+sectors.
 </p>
 
 <h4>Documentation</h4>
@@ -139,7 +147,7 @@ Floor, Boston, MA 02110-1301 USA
 Verbatim copying and distribution of this entire article is
 permitted in any medium, provided this notice is preserved.
 <p>
-Updated: $Date: 2010/04/06 16:10:04 $ $Author: antonio $
+Updated: $Date: 2010/08/28 11:55:20 $ $Author: antonio $
 </p>
 <hr>
 </body>

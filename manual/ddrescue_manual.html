@@ -51,7 +51,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
 
 <h2 class="unnumbered">GNU ddrescue Manual</h2>
 
-<p>This manual is for GNU ddrescue (version 1.12, 6 April 2010).
+<p>This manual is for GNU ddrescue (version 1.13, 27 August 2010).
 
 <ul class="menu">
 <li><a accesskey="1" href="#Introduction">Introduction</a>: 	Purpose and features of GNU ddrescue
@@ -100,6 +100,11 @@ reverse mode, etc.
 efficiently, (only the needed blocks are read). Also you can interrupt
 the rescue at any time and resume it later at the same point.
 
+   <p>Ddrescue does not write zeros to the output when it finds bad sectors in
+the input, and does not truncate the output file if not asked to. So,
+every time you run it on the same output file, it tries to fill in the
+gaps without wiping out the data already rescued.
+
    <p>Automatic merging of backups: If you have two or more damaged copies of
 a file, cdrom, etc, and run ddrescue on all of them, one at a time,
 with the same output file, you will probably obtain a complete and
@@ -108,17 +113,17 @@ areas at the same places on different input files is very low. Using
 the logfile, only the needed blocks are read from the second and
 successive copies.
 
-   <p>Ddrescue recommends lzip for compression of backups, because of its
-reliability and data recovery capabilities.
+   <p>Ddrescue recommends lzip for compression of backups because of its
+reliability and data recovery capabilities, including error-checked
+merging of backup copies. The combination ddrescue + lziprecover is the
+best option for recovering data from multiple damaged copies. See the
+tutorial for an example (see <a href="#lzip_002dexample">lzip-example</a>).
 
    <p>Recordable CD and DVD media keep their data only for a finite time
 (typically for many years). After that time, data loss develops slowly
 with read errors growing from the outer media region towards the inside. 
 Just make two (or more) copies of every important CD/DVD you burn so
 that you can later recover them with ddrescue.
-
-   <p>Ddrescue does not truncate the output file if not asked to. So, every
-time you run it on the same output file, it tries to fill in the gaps.
 
    <p>Because ddrescue needs to read and write at random places, it only works
 on seekable (random access) input and output files.
@@ -158,6 +163,12 @@ their associated file names.
 
      <br><dt>Partition<dd>Every part in which a device is divided. A partition normally contains a
 filesystem. /dev/hda1, /dev/sdb3, are partition names.
+
+     <br><dt>Recoverable formats<dd>As ddrescue uses standard library functions to read data from the device
+being rescued, only mountable device formats can be rescued with
+ddrescue. DVDs can be mounted and they can be rescued, "compact disc
+digital audio" CDs can't, "video CDs"[1] maybe.<br>
+[1] http://en.wikipedia.org/wiki/Video_CD
 
      <br><dt>Sector<dd>Hardware block. Smallest accessible amount of data on a device.
 
@@ -235,7 +246,7 @@ over different subsets. See this example:
 
 <p class="noindent">Rescue the most important part of the disc first.
 <pre class="example">     ddrescue -i0 -s50M /dev/hdc hdimage logfile
-     ddrescue -i0 -s1M -r3 -d /dev/hdc hdimage logfile
+     ddrescue -i0 -s1M -d -r3 /dev/hdc hdimage logfile
 </pre>
    <p class="noindent">Then rescue some key disc areas.
 <pre class="example">     ddrescue -i30G -s10G /dev/hdc hdimage logfile
@@ -243,7 +254,7 @@ over different subsets. See this example:
 </pre>
    <p class="noindent">Now rescue the rest (does not recopy what is already done).
 <pre class="example">     ddrescue /dev/hdc hdimage logfile
-     ddrescue -r3 -d /dev/hdc hdimage logfile
+     ddrescue -d -r3 /dev/hdc hdimage logfile
 </pre>
    <div class="node">
 <p><hr>
@@ -297,6 +308,9 @@ write). May be useful when forcing the drive to remap its bad sectors.
 
      <br><dt>`<samp><span class="samp">--max-errors=</span><var>n</var></samp>'<dt>`<samp><span class="samp">-e </span><var>n</var></samp>'<dd>Maximum number of error areas allowed before giving up. Defaults to infinity.
 
+     <br><dt>`<samp><span class="samp">--force</span></samp>'<dt>`<samp><span class="samp">-f</span></samp>'<dd>Force overwrite of output file. Needed when the output file is not a
+regular file, but a device or partition.
+
      <br><dt>`<samp><span class="samp">--fill=</span><var>types</var></samp>'<dt>`<samp><span class="samp">-F </span><var>types</var></samp>'<dd>Fill the output file blocks specified as any of <var>types</var> in the
 logfile, with data read from the input file. <var>types</var> contains one or
 more of the status characters defined in the chapter Logfile Structure
@@ -323,7 +337,14 @@ rescue the most difficult parts of the file. This option overrides the
 `<samp><span class="samp">--input-position</span></samp>'. The bytes below <var>pos</var> aren't touched if
 they exist and truncation is not requested. Else they are set to 0.
 
-     <br><dt>`<samp><span class="samp">--quiet</span></samp>'<dt>`<samp><span class="samp">-q</span></samp>'<dd>Quiet operation.
+     <br><dt>`<samp><span class="samp">--preallocate</span></samp>'<dt>`<samp><span class="samp">-p</span></samp>'<dd>Preallocate space on disc for output file. Only space for regular files
+can be preallocated. If preallocation succeeds, rescue will not fail due
+to lack of free space on disc. If ddrescue can't determine the size to
+preallocate, you may need to specify it with some combination of the
+`<samp><span class="samp">--input-position</span></samp>', `<samp><span class="samp">--output-position</span></samp>', `<samp><span class="samp">--max-size</span></samp>',
+and `<samp><span class="samp">--domain-logfile</span></samp>' options.
+
+     <br><dt>`<samp><span class="samp">--quiet</span></samp>'<dt>`<samp><span class="samp">-q</span></samp>'<dd>Quiet operation. Suppress all messages.
 
      <br><dt>`<samp><span class="samp">--max-retries=</span><var>n</var></samp>'<dt>`<samp><span class="samp">-r </span><var>n</var></samp>'<dd>Exit after given number of retry passes. Defaults to 0. -1 means
 infinity. Every bad sector is tried only one time per pass. To retry bad
@@ -393,13 +414,21 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
 <h2 class="chapter">5 Logfile Structure</h2>
 
 <p><a name="index-logfile-structure-8"></a>
-The logfile is a text file easy to read and edit. It is formed of two
-parts, the status line and the list of data blocks.
+The logfile is a text file easy to read and edit. It is formed by three
+parts, the heading comments, the status line, and the list of data
+blocks.
+
+   <p>Any line beginning with `<samp><span class="samp">#</span></samp>' is a comment line. The blocks in the
+list of data blocks must be contiguous and non-overlapping.
 
    <p>NOTE: Logfiles generated by a version of ddrescue prior to 1.6 lack the
 status line. If you want to use an old logfile with ddrescue 1.6 or
 later, you will have to insert a line like `<samp><span class="samp">0 +</span></samp>' at the beginning
 of the logfile.
+
+   <p>The heading comments contain the version of ddrescue and the command
+line used to create the logfile. They are intended as information for
+the user.
 
    <p>The first non-comment line is the status line. It contains a
 non-negative integer and a status character. The integer is the position
@@ -431,7 +460,8 @@ is one of these:
 
 <p class="noindent">And here is an example logfile:
 
-<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.12<br>
+<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.13<br>
+# Command line: ddrescue /dev/fd0 fdimage logfile<br>
 # current_pos  current_status<br>
 0x00120000     ?<br>
 #      pos         size   status<br>
@@ -441,9 +471,6 @@ is one of these:
 <br></td></tr><tr align="left"><td valign="top">0x00118200 </td><td valign="top">0x00007E00 </td><td valign="top">*
 <br></td></tr><tr align="left"><td valign="top">0x00120000 </td><td valign="top">0x00048000 </td><td valign="top">?
    <br></td></tr></table>
-
-   <p>Any line beginning with `<samp><span class="samp">#</span></samp>' is a comment line. The blocks must be
-contiguous and non-overlapping.
 
    <p>If you edit the file, you may use decimal, hexadecimal or octal values,
 using the same syntax that integer constants in C++.
@@ -470,16 +497,24 @@ notice the first error. Be diligent because every time a physicaly
 damaged drive powers up and is able to output some data, it may be the
 very last time that it ever will.
 
+   <p>You should make a copy of the failing drive with ddrescue, and then try
+to repair the copy. If your data is really important, use the first copy
+as a master for a second copy, and try to repair the second copy. If
+something goes wrong, you have the master intact to try again.
+
    <p>IMPORTANT! Always use a logfile unless you know you won't need it. 
 Without a logfile, ddrescue can't resume a rescue, only reinitiate it.
 
    <p>IMPORTANT! Never try to rescue a r/w mounted partition. The resulting
 copy may be useless.
 
-   <p>You should make a copy of the failing drive with ddrescue, and then try
-to repair the copy. If your data is really important, use the first copy
-as a master for a second copy, and try to repair the second copy. If
-something goes wrong, you have the master intact to try again.
+   <p>IMPORTANT! If you use a device or a partition as destination, any data
+stored there will be overwritten.
+
+   <p>IMPORTANT! If you interrupt the rescue and then reboot, any partially
+copied partitions should be hidden before allowing them to be touched by
+any operating system that tries to mount and "fix" the partitions it
+sees.
 
    <p>IMPORTANT! Never try to repair a file system on a drive with I/O errors;
 you will probably lose even more data.
@@ -504,11 +539,13 @@ At least not with ddrescue.
 
 </pre>
 Example 1: Rescue a whole disc with two ext2 partitions in /dev/hda to
-/dev/hdb<br>
-Note: you do not need to partition /dev/hdb beforehand.
+/dev/hdb.<br>
+Note: you do not need to partition /dev/hdb beforehand, but if the
+partition table on /dev/hda is damaged, you'll need to recreate it
+somehow on /dev/hdb.
 
-<pre class="example">     ddrescue -n /dev/hda /dev/hdb logfile
-     ddrescue -dr3 /dev/hda /dev/hdb logfile
+<pre class="example">     ddrescue -f -n /dev/hda /dev/hdb logfile
+     ddrescue -d -f -r3 /dev/hda /dev/hdb logfile
      fdisk /dev/hdb
      e2fsck -v -f /dev/hdb1
      e2fsck -v -f /dev/hdb2
@@ -516,56 +553,76 @@ Note: you do not need to partition /dev/hdb beforehand.
    <pre class="sp">
 
 </pre>
-Example 2: Rescue an ext2 partition in /dev/hda2 to /dev/hdb2<br>
+Example 2: Rescue an ext2 partition in /dev/hda2 to /dev/hdb2.<br>
 Note: you need to create the hdb2 partition with fdisk first. hdb2
 should be of appropiate type and size.
 
-<pre class="example">     ddrescue -n /dev/hda2 /dev/hdb2 logfile
-     ddrescue -d -r3 /dev/hda2 /dev/hdb2 logfile
+<pre class="example">     ddrescue -f -n /dev/hda2 /dev/hdb2 logfile
+     ddrescue -d -f -r3 /dev/hda2 /dev/hdb2 logfile
      e2fsck -v -f /dev/hdb2
      mount -t ext2 -o ro /dev/hdb2 /mnt
-     read files from /mnt
+       (read rescued files from /mnt)
 </pre>
    <pre class="sp">
 
 </pre>
-Example 3: Rescue a CD-ROM in /dev/cdrom
+Example 3: Rescue a CD-ROM in /dev/cdrom.
 
 <pre class="example">     ddrescue -n -b2048 /dev/cdrom cdimage logfile
      ddrescue -d -b2048 /dev/cdrom cdimage logfile
-     write cdimage to a blank CD-ROM
+       (write cdimage to a blank CD-ROM)
 </pre>
    <pre class="sp">
 
 </pre>
-Example 4: Rescue a lzip compressed backup from two copies
+Example 4: Rescue a CD-ROM in /dev/cdrom from two copies.
 
-<pre class="example">     ddrescue copy1.tar.lz rescued.tar.lz logfile
-     ddrescue -r1 copy2.tar.lz rescued.tar.lz logfile
-     test the integrity of the rescued file with `<samp><span class="samp">lzip&nbsp;-t</span></samp>'<!-- /@w --> and use
-     `<samp><span class="samp">lziprecover</span></samp>' if needed.
+<pre class="example">     ddrescue -n -b2048 /dev/cdrom cdimage logfile
+     ddrescue -d -b2048 /dev/cdrom cdimage logfile
+       (insert second copy in the CD drive)
+     ddrescue -d -r1 -b2048 /dev/cdrom cdimage logfile
+       (write cdimage to a blank CD-ROM)
+</pre>
+   <p><a name="lzip_002dexample"></a>
+   <pre class="sp">
+
+</pre>
+Example 5: Rescue a lzip compressed backup from two copies on CD-ROM
+with error-checked merging of copies (see the lzip manual for details
+about lziprecover).
+
+<pre class="example">     ddrescue -b2048 /dev/cdrom cdimage1 logfile1
+     mount -t iso9660 -o loop,ro cdimage1 /mnt/cdimage
+     cp /mnt/cdimage/backup.tar.lz rescued1.tar.lz
+     umount /mnt/cdimage
+       (insert second copy in the CD drive)
+     ddrescue -b2048 /dev/cdrom cdimage2 logfile2
+     mount -t iso9660 -o loop,ro cdimage2 /mnt/cdimage
+     cp /mnt/cdimage/backup.tar.lz rescued2.tar.lz
+     umount /mnt/cdimage
+     lziprecover --merge -o rescued.tar.lz rescued1.tar.lz rescued2.tar.lz
 </pre>
    <pre class="sp">
 
 </pre>
-Example 5: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hdb
-fails and you have to rescue data to a third drive, /dev/hdc
+Example 6: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hdb
+fails and you have to rescue data to a third drive, /dev/hdc.
 
-<pre class="example">     ddrescue -n /dev/hda /dev/hdb logfile1     &lt;-- /dev/hdb fails here
-     ddrescue -m logfile1 /dev/hdb /dev/hdc logfile2
-     ddrescue -n /dev/hda /dev/hdc logfile2
-     ddrescue -dr3 /dev/hda /dev/hdc logfile2
+<pre class="example">     ddrescue -f -n /dev/hda /dev/hdb logfile1     &lt;-- /dev/hdb fails here
+     ddrescue -f -m logfile1 /dev/hdb /dev/hdc logfile2
+     ddrescue -f -n /dev/hda /dev/hdc logfile2
+     ddrescue -d -f -r3 /dev/hda /dev/hdc logfile2
 </pre>
    <pre class="sp">
 
 </pre>
-Example 6: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hda
-stops responding and disappears from /dev
+Example 7: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hda
+stops responding and disappears from /dev.
 
-<pre class="example">     ddrescue -n /dev/hda /dev/hdb logfile      &lt;-- /dev/hda fails here
+<pre class="example">     ddrescue -f -n /dev/hda /dev/hdb logfile      &lt;-- /dev/hda fails here
        (restart /dev/hda or reboot computer as many times as needed)
-     ddrescue -nT /dev/hda /dev/hdb logfile
-     ddrescue -dr3 /dev/hda /dev/hdb logfile
+     ddrescue -f -n -T /dev/hda /dev/hdb logfile
+     ddrescue -d -f -r3 /dev/hda /dev/hdb logfile
 </pre>
    <div class="node">
 <p><hr>
@@ -607,21 +664,21 @@ sectors inside the failed blocks.
    <pre class="sp">
 
 </pre>
-Example 1: using direct disc access
+Example 1: using direct disc access.
 
-<pre class="example">     ddrescue -n /dev/hdb1 /dev/hdc1 logfile
-     ddrescue -d -r3 /dev/hdb1 /dev/hdc1 logfile
+<pre class="example">     ddrescue -f -n /dev/hdb1 /dev/hdc1 logfile
+     ddrescue -d -f -r3 /dev/hdb1 /dev/hdc1 logfile
      e2fsck -v -f /dev/hdc1
      mount -t ext2 -o ro /dev/hdc1 /mnt
 </pre>
    <pre class="sp">
 
 </pre>
-Example 2: using a raw device
+Example 2: using a raw device.
 
 <pre class="example">     raw /dev/raw/raw1 /dev/hdb1
-     ddrescue -n /dev/hdb1 /dev/hdc1 logfile
-     ddrescue -r3 -C /dev/raw/raw1 /dev/hdc1 logfile
+     ddrescue -f -n /dev/hdb1 /dev/hdc1 logfile
+     ddrescue -C -f -r3 /dev/raw/raw1 /dev/hdc1 logfile
      raw /dev/raw/raw1 0 0
      e2fsck -v -f /dev/hdc1
      mount -t ext2 -o ro /dev/hdc1 /mnt
@@ -687,7 +744,7 @@ This is the fastest way of wiping a failing drive, and is specially
 useful when sending the drive back to the manufacturer for warranty
 replacement.
 
-<pre class="example">     ddrescue --fill=+ /dev/zero bad_drive logfile
+<pre class="example">     ddrescue --fill=+ --force /dev/zero bad_drive logfile
 </pre>
    <p class="noindent">Example 3: Force the drive to remap the bad sectors, making it usable
 again. If the drive has only a few bad sectors, and they are not caused
@@ -695,7 +752,7 @@ by drive age, you can probably just rewrite those sectors, and the drive
 will reallocate them automatically to new "spare" sectors that it keeps
 for just this purpose. WARNING! This may not work on your drive.
 
-<pre class="example">     ddrescue --fill=- --synchronous /dev/zero bad_drive logfile
+<pre class="example">     ddrescue --fill=- --force --synchronous /dev/zero bad_drive logfile
 </pre>
    <pre class="sp">
 
