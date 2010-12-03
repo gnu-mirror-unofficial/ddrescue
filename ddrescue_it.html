@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15">
+<title>Ddrescue - GNU Project - Free Software Foundation (FSF)</title>
+<link rev="made" href="mailto:webmasters@www.gnu.org">
+<meta name="keywords" content="ddrescue, recupero dati, lzip, GNU, FSF, free software">
+<meta name="description" content="Strumento di recupero dati">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#1f00ff" alink="#ff0000" vlink="#9900dd">
+
+<h3>Ddrescue - Strumento di recupero dati</h3>
+<a href="/graphics/agnuhead.html"><img src="/graphics/gnu-head-sm.jpg"
+ alt=" [image of the head of a GNU] " width="129" height="122"></a>
+
+[ <a href="ddrescue.html">English</a>
+| <a href="ddrescue_es.html">Español</a>
+| <a href="ddrescue_it.html">Italiano</a> ]
+
+<h4>Introduzione</h4>
+
+GNU ddrescue è uno strumento di recupero dati. Copia i dati da un file o
+dispositivo a blocchi (hard disk, cdrom, ecc.) ad un altro, cercando
+fortemente di recuperare i dati in caso di errori di lettura.
+<p>
+Il funzionamento base di ddrescue è pienamente automatico. Non si deve
+perciò aspettare un errore, fermare il programma, leggere il registro,
+eseguirlo in modalità inversa, ecc.
+<p>
+Se si usa la funzionalità per file di registro di ddrescue, i dati sono
+recuperati molto efficacemente (sono letti solo i blocchi necessari).
+Inoltre si può interrompere il ripristino in qualsiasi momento e
+riprenderlo successivamente dallo stesso punto.
+<p>
+Ddrescue non scrive zeri in uscita quando trova settori danneggiati in
+ingresso, e non tronca il file di output se non richiesto. Perciò, ogni
+volta che lo si esegue sullo stesso file di output, cerca di riempire i
+vuoti, senza cancellare i dati già salvati.
+<p>
+L'unione automatica di backup: se si hanno due o più copie danneggiate
+di un file, cdrom, ecc. e si esegue ddrescue su tutte, una alla volta,
+con lo stesso file di output, probabilmente si otterrà un file completo
+e senza errori. Questo perché la probabilità di avere aree danneggiate
+nello stesso punto in file di input differenti è molto bassa. Usando il
+file di registro sono letti solo i blocchi necessari dalla seconda copia
+e dalle successive.
+<p>
+Ddrescue raccomanda
+<a href="http://www.nongnu.org/lzip/lzip_it.html">lzip</a> per la
+compressione dei backup, per la sua affidabilità e capacità di recupero
+dati, inclusa la fusione di copie di backup con controllo degli errori.
+La combinazione ddrescue + lziprecover è l'opzione migliore per il
+recupero dati da copie molto danneggiate.
+<p>
+Supporti CD e DVD registrabili conservano i propri dati solo per un
+tempo limitato (in genere per molti anni). Trascorso tale termine, la
+perdita di dati aumenta lentamente, con errori di lettura crescenti a
+partire dalla regione esterna dei supporti verso l'interno. E'
+sufficiente fare due (o più) copie di ogni CD/DVD importante che si
+masterizza in modo da poter poi recuperarle con ddrescue.
+<p>
+Il file di registro è periodicamente salvato su disco. Perciò in caso di
+crash si può riprendere il ripristino senza ricopiare molto.
+<p>
+Inoltre, lo stesso file di registro può essere usato per comandi
+multipli che copiano aree differenti del file e per tentativi di
+recupero multipli su sottoinsiemi diversi.
+<p>
+Ddrescue dispone anche di una "modalità di riempimento" in grado di
+sovrascrivere selettivamente parti del file di output, che ha un certo
+numero di utilizzi interessanti come cancellare i dati, la marcatura di
+aree danneggiate o addirittura, in alcuni casi, "riparare" i settori
+danneggiati.
+</p>
+
+<h4>Documentazione</h4>
+
+Il manuale è disponibile nel <em>sistema info</em> del <em>Sistema
+Operativo GNU</em>. Utilizza <em>info</em> per accedere alla pagina di
+informazioni principali. Usa <em>info ddrescue</em> per accedere
+direttamente alla sezione ddrescue.
+<p>
+Un manuale online per ddrescue può essere trovato
+<a href="manual/ddrescue_manual.html">qui</a>.
+</p>
+
+<h4>Scarica (Download) ddrescue</h4>
+
+L'ultima versione rilasciata di lzip può essere trovata all'indirizzo
+<a href="http://ftpmirror.gnu.org/ddrescue/">http://ftpmirror.gnu.org/ddrescue/</a>
+o nella sottocartella <code>/gnu/ddrescue/</code> sul tuo preferito
+<a href="http://www.gnu.org/prep/ftp.html">GNU mirror</a>.
+Per conoscere altri modi per ottenere ddrescue, leggi
+<a href="http://www.gnu.org/software/software.it.html">Come
+ottenere il software GNU</a>. La più recente versione rilasciata sarà la
+più recente versione disponibile all'indirizzo <a href="http://ftp.gnu.org/gnu/ddrescue/">
+http://ftp.gnu.org/gnu/ddrescue/</a>.
+<p>
+Vecchie versioni e versioni di test possono essere trovate all'indirizzo
+<a href="http://download.savannah.gnu.org/releases/ddrescue/">
+http://download.savannah.gnu.org/releases/ddrescue/</a>.
+</p>
+
+<h4>Come ottenere aiuto</h4>
+
+Per la discussione generale dei bug di ddrescue la mailing list
+<a href="mailto:bug-ddrescue@gnu.org"><em>bug-ddrescue@gnu.org</em></a>
+è il forum più appropriato. Si prega di inviare i messaggi come testo
+semplice. Si prega di non inviare messaggi codificati in formato HTML,
+né codificati come Base64 MIME e non incluse in formato multiplo. Si
+prega di includere un frase descrittiva nell'oggetto. Se tutti gli
+oggetti sono "bug in ddrescue" è impossibile distinguerli.
+<p>
+L'archivio della mailing list di bug report è disponibile all'indirizzo
+<a href="http://lists.gnu.org/mailman/listinfo/bug-ddrescue">
+<em>http://lists.gnu.org/mailman/listinfo/bug-ddrescue</em></a>.
+</p>
+
+<h4>Come aiutare</h4>
+
+Per contattare l'autore, sia per segnalare un bug o per contribuire con
+correzioni o miglioramenti, inviare una mail a
+<a href="mailto:bug-ddrescue@gnu.org"><em>bug-ddrescue@gnu.org</em></a>.
+Si prega di inviare i messaggi come testo normale. Se inviate patch
+dovrebbero essere nel formato diff unificato aggiornato all'ultima
+versione. Queste dovrebbero includere una descrizione testuale.
+<p>
+Vedi anche la pagina del
+<a href="https://savannah.gnu.org/projects/ddrescue/">progetto ddrescue</a>
+su Savannah.
+<p>
+<a href="http://validator.w3.org/check?uri=referer"><img border="0"
+         src="http://www.w3.org/Icons/valid-html401"
+         alt="Valid HTML 4.01!" height="31" width="88"></a>
+</p>
+
+<hr>
+Questa pagina è stata tradotta da Paolo Melchiorre.
+<p>
+Ritorna alla <a href="http://www.gnu.org/home.it.html">home page GNU</a>.
+<p>
+Per informazioni su FSF e GNU rivolgetevi, possibilmente in inglese, a
+<a href="mailto:gnu@gnu.org"><em>gnu@gnu.org</em></a>. Ci sono anche
+<a href="http://www.fsf.org/about/contact.html">altri modi di contattare</a>
+la FSF.
+<p>
+Puoi inviare commenti relativi a questa pagina in particolare a
+<a href="mailto:bug-ddrescue@gnu.org"><em>bug-ddrescue@gnu.org</em></a>,
+inviate commenti relativi alle pagine web di www.gnu.org in generale a
+<a href="mailto:webmasters@www.gnu.org"><em>webmasters@www.gnu.org</em></a>,
+inviate le altre questioni a
+<a href="mailto:gnu@gnu.org"><em>gnu@gnu.org</em></a>.
+<p>
+Copyright &copy; 2010 Free Software Foundation, Inc., 51 Franklin St, Fifth
+Floor, Boston, MA 02110-1301 USA
+<p>
+La copia letterale e la distribuzione di questo articolo nella sua
+integrità sono permesse con qualsiasi mezzo, a condizione che questa
+nota sia riprodotta.
+<p>
+Updated: $Date: 2010/12/03 17:41:25 $ $Author: antonio $
+</p>
+<hr>
+</body>
+</html>
