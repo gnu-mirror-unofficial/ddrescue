@@ -20,27 +20,6 @@
 --></style>
 </head>
 <body>
-<h1 class="settitle">GNU ddrescue Manual</h1>
-<div class="contents">
-<h2>Table of Contents</h2>
-<ul>
-<li><a name="toc_Top" href="#Top">GNU ddrescue Manual</a>
-<li><a name="toc_Introduction" href="#Introduction">1 Introduction</a>
-<li><a name="toc_Basic-concepts" href="#Basic-concepts">2 Basic concepts</a>
-<li><a name="toc_Algorithm" href="#Algorithm">3 Algorithm</a>
-<li><a name="toc_Invoking-ddrescue" href="#Invoking-ddrescue">4 Invoking ddrescue</a>
-<li><a name="toc_Logfile-Structure" href="#Logfile-Structure">5 Logfile Structure</a>
-<li><a name="toc_Examples" href="#Examples">6 A small tutorial with examples</a>
-<li><a name="toc_Direct-Disc-Access" href="#Direct-Disc-Access">7 Direct Disc Access</a>
-<li><a name="toc_Fill-Mode" href="#Fill-Mode">8 Fill Mode</a>
-<li><a name="toc_Generate-Mode" href="#Generate-Mode">9 Generate-logfile Mode</a>
-<li><a name="toc_Problems" href="#Problems">10 Reporting Bugs</a>
-<li><a name="toc_Concept-Index" href="#Concept-Index">Concept Index</a>
-</li></ul>
-</div>
-
-
-
 <div class="node">
 <p><hr>
 <a name="Top"></a>
@@ -51,26 +30,26 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
 
 <h2 class="unnumbered">GNU ddrescue Manual</h2>
 
-<p>This manual is for GNU ddrescue (version 1.13, 27 August 2010).
+<p>This manual is for GNU ddrescue (version 1.14, 10 January 2011).
 
 <ul class="menu">
-<li><a accesskey="1" href="#Introduction">Introduction</a>: 	Purpose and features of GNU ddrescue
-<li><a accesskey="2" href="#Basic-concepts">Basic concepts</a>: 	Blocks, clusters, devices, files, sectors, etc
-<li><a accesskey="3" href="#Algorithm">Algorithm</a>: 		How ddrescue recovers the data
-<li><a accesskey="4" href="#Invoking-ddrescue">Invoking ddrescue</a>: 	Command line interface
-<li><a accesskey="5" href="#Logfile-Structure">Logfile Structure</a>: 	Detailed format of the logfile
-<li><a accesskey="6" href="#Examples">Examples</a>: 		A small tutorial with examples
-<li><a accesskey="7" href="#Direct-Disc-Access">Direct Disc Access</a>: 	Bypassing the kernel cache
-<li><a accesskey="8" href="#Fill-Mode">Fill Mode</a>: 		Selectively overwriting the output file
-<li><a accesskey="9" href="#Generate-Mode">Generate Mode</a>: 	Generating an approximate logfile
-<li><a href="#Problems">Problems</a>: 		Reporting bugs
-<li><a href="#Concept-Index">Concept Index</a>: 	Index of concepts
+<li><a accesskey="1" href="#Introduction">Introduction</a>:         Purpose and features of GNU ddrescue
+<li><a accesskey="2" href="#Basic-concepts">Basic concepts</a>:       Blocks, clusters, devices, files, sectors, etc
+<li><a accesskey="3" href="#Algorithm">Algorithm</a>:            How ddrescue recovers the data
+<li><a accesskey="4" href="#Invoking-ddrescue">Invoking ddrescue</a>:    Command line interface
+<li><a accesskey="5" href="#Logfile-Structure">Logfile Structure</a>:    Detailed format of the logfile
+<li><a accesskey="6" href="#Examples">Examples</a>:             A small tutorial with examples
+<li><a accesskey="7" href="#Direct-Disc-Access">Direct Disc Access</a>:   Bypassing the kernel cache
+<li><a accesskey="8" href="#Fill-Mode">Fill Mode</a>:            Selectively overwriting the output file
+<li><a accesskey="9" href="#Generate-Mode">Generate Mode</a>:        Generating an approximate logfile
+<li><a href="#Problems">Problems</a>:             Reporting bugs
+<li><a href="#Concept-Index">Concept Index</a>:        Index of concepts
 </ul>
 
    <pre class="sp">
 
 </pre>
-Copyright &copy; 2004, 2005, 2006, 2007, 2008, 2009, 2010
+Copyright &copy; 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
 Antonio Diaz Diaz.
 
    <p>This manual is free documentation: you have unlimited permission
@@ -116,8 +95,8 @@ successive copies.
    <p>Ddrescue recommends lzip for compression of backups because of its
 reliability and data recovery capabilities, including error-checked
 merging of backup copies. The combination ddrescue + lziprecover is the
-best option for recovering data from multiple damaged copies. See the
-tutorial for an example (see <a href="#lzip_002dexample">lzip-example</a>).
+best option for recovering data from multiple damaged copies. 
+See <a href="#lzip_002dexample">lzip-example</a>, for an example
 
    <p>Recordable CD and DVD media keep their data only for a finite time
 (typically for many years). After that time, data loss develops slowly
@@ -221,9 +200,9 @@ found as bad-sector and mark the rest of that block as non-split.
 
    <p>4) Read forwards one sector at a time the non-split blocks, marking the
 bad sectors found as bad-sector. After a number of consecutive bad
-sectors is found in a block larger enough, the block is split by half
-and the reading continues on the second half. This recursively splits
-the largest failed blocks without producing a logfile too large.
+sectors is found in a block large enough, the block is split by half and
+the reading continues on the second half. This recursively splits the
+largest failed blocks without producing a logfile too large.
 
    <p>5) Optionally try to read again the bad sectors until the specified
 number of retries is reached.
@@ -275,26 +254,26 @@ The format for running ddrescue is:
    <p>ddrescue supports the following options:
 
      <dl>
-<dt>`<samp><span class="samp">--help</span></samp>'<dt>`<samp><span class="samp">-h</span></samp>'<dd>Print an informative help message describing the options and exit.
+<dt>`<samp><span class="samp">-h</span></samp>'<dt>`<samp><span class="samp">--help</span></samp>'<dd>Print an informative help message describing the options and exit.
 
-     <br><dt>`<samp><span class="samp">--version</span></samp>'<dt>`<samp><span class="samp">-V</span></samp>'<dd>Print the version number of ddrescue on the standard output and exit.
+     <br><dt>`<samp><span class="samp">-V</span></samp>'<dt>`<samp><span class="samp">--version</span></samp>'<dd>Print the version number of ddrescue on the standard output and exit.
 
-     <br><dt>`<samp><span class="samp">--block-size=</span><var>bytes</var></samp>'<dt>`<samp><span class="samp">-b </span><var>bytes</var></samp>'<dd>Hardware block (sector) size of input device in bytes (usually 512 for
+     <br><dt>`<samp><span class="samp">-b </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--block-size=</span><var>bytes</var></samp>'<dd>Sector (hardware block) size of input device in bytes (usually 512 for
 hard discs and 3.5" floppies, 1024 for 5.25" floppies, and 2048 for
 cdroms). Defaults to 512.
 
-     <br><dt>`<samp><span class="samp">--binary-prefixes</span></samp>'<dt>`<samp><span class="samp">-B</span></samp>'<dd>Show units with binary prefixes (powers of 1024).<br>
+     <br><dt>`<samp><span class="samp">-B</span></samp>'<dt>`<samp><span class="samp">--binary-prefixes</span></samp>'<dd>Show units with binary prefixes (powers of 1024).<br>
 SI prefixes (powers of 1000) are used by default. (See table below).
 
-     <br><dt>`<samp><span class="samp">--cluster-size=</span><var>sectors</var></samp>'<dt>`<samp><span class="samp">-c </span><var>sectors</var></samp>'<dd>Number of sectors to copy at a time. Defaults to 64KiB&nbsp;/&nbsp;sector_size<!-- /@w -->. 
+     <br><dt>`<samp><span class="samp">-c </span><var>sectors</var></samp>'<dt>`<samp><span class="samp">--cluster-size=</span><var>sectors</var></samp>'<dd>Number of sectors to copy at a time. Defaults to 64KiB&nbsp;/&nbsp;sector_size<!-- /@w -->. 
 Try smaller values for slow drives. The number of sectors per track (18
 or 9) is a good value for floppies.
 
-     <br><dt>`<samp><span class="samp">--complete-only</span></samp>'<dt>`<samp><span class="samp">-C</span></samp>'<dd>Limit rescue domain to the blocks listed in the logfile. Do not read new
+     <br><dt>`<samp><span class="samp">-C</span></samp>'<dt>`<samp><span class="samp">--complete-only</span></samp>'<dd>Limit rescue domain to the blocks listed in the logfile. Do not read new
 data beyond logfile limits. This is useful when reading from devices of
 undefined size, like raw devices.
 
-     <br><dt>`<samp><span class="samp">--direct</span></samp>'<dt>`<samp><span class="samp">-d</span></samp>'<dd>Use direct disc access to read the input file, bypassing the kernel
+     <br><dt>`<samp><span class="samp">-d</span></samp>'<dt>`<samp><span class="samp">--direct</span></samp>'<dd>Use direct disc access to read the input file, bypassing the kernel
 cache. (Open the file with the O_DIRECT flag). Use it only on devices or
 partitions, not on regular files. Sector size must be correctly set for
 this to work. Not all systems support this.
@@ -303,60 +282,70 @@ this to work. Not all systems support this.
 you. If the sector size is not correctly set, all reads will result in
 errors, and no data will be rescued.
 
-     <br><dt>`<samp><span class="samp">--synchronous</span></samp>'<dt>`<samp><span class="samp">-D</span></samp>'<dd>Use synchronous writes for output file. (Issue a fsync call after every
+     <br><dt>`<samp><span class="samp">-D</span></samp>'<dt>`<samp><span class="samp">--synchronous</span></samp>'<dd>Use synchronous writes for output file. (Issue a fsync call after every
 write). May be useful when forcing the drive to remap its bad sectors.
 
-     <br><dt>`<samp><span class="samp">--max-errors=</span><var>n</var></samp>'<dt>`<samp><span class="samp">-e </span><var>n</var></samp>'<dd>Maximum number of error areas allowed before giving up. Defaults to infinity.
+     <br><dt>`<samp><span class="samp">-e [+]</span><var>n</var></samp>'<dt>`<samp><span class="samp">--max-errors=[+]</span><var>n</var></samp>'<dd>Maximum number of error areas allowed before giving up. Defaults to
+infinity. If <var>n</var> is preceded by `<samp><span class="samp">+</span></samp>' the number refers to new
+error areas found in this run, not counting those already annotated in
+the logfile.
 
-     <br><dt>`<samp><span class="samp">--force</span></samp>'<dt>`<samp><span class="samp">-f</span></samp>'<dd>Force overwrite of output file. Needed when the output file is not a
+     <br><dt>`<samp><span class="samp">-E </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--max-error-rate=</span><var>bytes</var></samp>'<dd>Maximum growth per second of error size, in bytes, allowed before giving
+up. Defaults to infinity.
+
+     <br><dt>`<samp><span class="samp">-f</span></samp>'<dt>`<samp><span class="samp">--force</span></samp>'<dd>Force overwrite of output file. Needed when the output file is not a
 regular file, but a device or partition.
 
-     <br><dt>`<samp><span class="samp">--fill=</span><var>types</var></samp>'<dt>`<samp><span class="samp">-F </span><var>types</var></samp>'<dd>Fill the output file blocks specified as any of <var>types</var> in the
+     <br><dt>`<samp><span class="samp">-F </span><var>types</var></samp>'<dt>`<samp><span class="samp">--fill=</span><var>types</var></samp>'<dd>Fill the output file blocks specified as any of <var>types</var> in the
 logfile, with data read from the input file. <var>types</var> contains one or
 more of the status characters defined in the chapter Logfile Structure
 (see <a href="#Logfile-Structure">Logfile Structure</a>). See the chapter Fill Mode (see <a href="#Fill-Mode">Fill Mode</a>) for a complete description of the fill mode.
 
-     <br><dt>`<samp><span class="samp">--generate-logfile</span></samp>'<dt>`<samp><span class="samp">-g</span></samp>'<dd>Generate an approximate logfile from the input and output files of the
-original rescue run. Note that you should keep the original offset
-between `<samp><span class="samp">--input-position</span></samp>' and `<samp><span class="samp">--output-position</span></samp>' of the
-original rescue run.
+     <br><dt>`<samp><span class="samp">-g</span></samp>'<dt>`<samp><span class="samp">--generate-logfile</span></samp>'<dd>Generate an approximate logfile from the input and output files of the
+original rescue run. Note that you must keep the original offset between
+`<samp><span class="samp">--input-position</span></samp>' and `<samp><span class="samp">--output-position</span></samp>' of the original
+rescue run.
 
-     <br><dt>`<samp><span class="samp">--input-position=</span><var>pos</var></samp>'<dt>`<samp><span class="samp">-i </span><var>pos</var></samp>'<dd>Starting position in input file, in bytes. Defaults to 0. In fill mode
+     <br><dt>`<samp><span class="samp">-i </span><var>pos</var></samp>'<dt>`<samp><span class="samp">--input-position=</span><var>pos</var></samp>'<dd>Starting position in input file, in bytes. Defaults to 0. In fill mode
 it refers to the original input file. See the chapter Fill Mode
 (see <a href="#Fill-Mode">Fill Mode</a>) for details.
 
-     <br><dt>`<samp><span class="samp">--domain-logfile=</span><var>file</var></samp>'<dt>`<samp><span class="samp">-m </span><var>file</var></samp>'<dd>Restrict the rescue domain to the blocks marked as finished in the
+     <br><dt>`<samp><span class="samp">-m </span><var>file</var></samp>'<dt>`<samp><span class="samp">--domain-logfile=</span><var>file</var></samp>'<dd>Restrict the rescue domain to the blocks marked as finished in the
 logfile <var>file</var>. This is useful if the destination drive fails during
 the rescue.
 
-     <br><dt>`<samp><span class="samp">--no-split</span></samp>'<dt>`<samp><span class="samp">-n</span></samp>'<dd>Stop after the trimming pass. Avoids spending a lot of time trying to
+     <br><dt>`<samp><span class="samp">-M</span></samp>'<dt>`<samp><span class="samp">--retrim</span></samp>'<dd>Mark all failed blocks inside the rescue domain as non-trimmed before
+beginning the rescue. The effect is similar to `<samp><span class="samp">--max-retries=1</span></samp>',
+but the bad sectors are tried in a different order, making perhaps
+possible to rescue some of them.
+
+     <br><dt>`<samp><span class="samp">-n</span></samp>'<dt>`<samp><span class="samp">--no-split</span></samp>'<dd>Stop after the trimming pass. Avoids spending a lot of time trying to
 rescue the most difficult parts of the file. This option overrides the
 `<samp><span class="samp">--max-retries</span></samp>' option.
 
-     <br><dt>`<samp><span class="samp">--output-position=</span><var>pos</var></samp>'<dt>`<samp><span class="samp">-o </span><var>pos</var></samp>'<dd>Starting position in output file, in bytes. Defaults to
+     <br><dt>`<samp><span class="samp">-o </span><var>pos</var></samp>'<dt>`<samp><span class="samp">--output-position=</span><var>pos</var></samp>'<dd>Starting position in output file, in bytes. Defaults to
 `<samp><span class="samp">--input-position</span></samp>'. The bytes below <var>pos</var> aren't touched if
 they exist and truncation is not requested. Else they are set to 0.
 
-     <br><dt>`<samp><span class="samp">--preallocate</span></samp>'<dt>`<samp><span class="samp">-p</span></samp>'<dd>Preallocate space on disc for output file. Only space for regular files
+     <br><dt>`<samp><span class="samp">-p</span></samp>'<dt>`<samp><span class="samp">--preallocate</span></samp>'<dd>Preallocate space on disc for output file. Only space for regular files
 can be preallocated. If preallocation succeeds, rescue will not fail due
 to lack of free space on disc. If ddrescue can't determine the size to
 preallocate, you may need to specify it with some combination of the
 `<samp><span class="samp">--input-position</span></samp>', `<samp><span class="samp">--output-position</span></samp>', `<samp><span class="samp">--max-size</span></samp>',
 and `<samp><span class="samp">--domain-logfile</span></samp>' options.
 
-     <br><dt>`<samp><span class="samp">--quiet</span></samp>'<dt>`<samp><span class="samp">-q</span></samp>'<dd>Quiet operation. Suppress all messages.
+     <br><dt>`<samp><span class="samp">-q</span></samp>'<dt>`<samp><span class="samp">--quiet</span></samp>'<dd>Quiet operation. Suppress all messages.
 
-     <br><dt>`<samp><span class="samp">--max-retries=</span><var>n</var></samp>'<dt>`<samp><span class="samp">-r </span><var>n</var></samp>'<dd>Exit after given number of retry passes. Defaults to 0. -1 means
+     <br><dt>`<samp><span class="samp">-r </span><var>n</var></samp>'<dt>`<samp><span class="samp">--max-retries=</span><var>n</var></samp>'<dd>Exit after given number of retry passes. Defaults to 0. -1 means
 infinity. Every bad sector is tried only one time per pass. To retry bad
 sectors detected on a previous run, you must specify a non-zero number
 of retries.
 
-     <br><dt>`<samp><span class="samp">--retrim</span></samp>'<dt>`<samp><span class="samp">-R</span></samp>'<dd>Mark all failed blocks inside the rescue domain as non-trimmed before
-beginning the rescue. The effect is similar to `<samp><span class="samp">--max-retries=1</span></samp>',
-but the bad sectors are tried in a different order, making perhaps
-possible to rescue some of them.
+     <br><dt>`<samp><span class="samp">-R</span></samp>'<dt>`<samp><span class="samp">--reverse</span></samp>'<dd>Reverse direction of all copy operations. This means the copy of the
+non-tried blocks, splitting and retrying are run backwards, while
+trimming is run forwards.
 
-     <br><dt>`<samp><span class="samp">--max-size=</span><var>bytes</var></samp>'<dt>`<samp><span class="samp">-s </span><var>bytes</var></samp>'<dd>Maximum size of the input data to be copied, in bytes. If ddrescue can't
+     <br><dt>`<samp><span class="samp">-s </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--max-size=</span><var>bytes</var></samp>'<dd>Maximum size of the input data to be copied, in bytes. If ddrescue can't
 determine the size of the input device, you may need to specify it with
 this option. Note that this option specifies the size of the input data
 to be copied, not the size of the output file. So, for example, the
@@ -365,20 +354,20 @@ data on the last 200 bytes:
 
      <pre class="example">          ddrescue -i 100 -s 200 infile outfile logfile
      </pre>
-     <br><dt>`<samp><span class="samp">--sparse</span></samp>'<dt>`<samp><span class="samp">-S</span></samp>'<dd>Use sparse writes for output file. (The blocks of zeros are not actually
+     <br><dt>`<samp><span class="samp">-S</span></samp>'<dt>`<samp><span class="samp">--sparse</span></samp>'<dd>Use sparse writes for output file. (The blocks of zeros are not actually
 allocated on disc). May save a lot of disc space in some cases. Not all
 systems support this.
 
-     <br><dt>`<samp><span class="samp">--truncate</span></samp>'<dt>`<samp><span class="samp">-t</span></samp>'<dd>Truncate output file to zero size before writing to it. Only works for
+     <br><dt>`<samp><span class="samp">-t</span></samp>'<dt>`<samp><span class="samp">--truncate</span></samp>'<dd>Truncate output file to zero size before writing to it. Only works for
 regular files, not for drives or partitions.
 
-     <br><dt>`<samp><span class="samp">--try-again</span></samp>'<dt>`<samp><span class="samp">-T</span></samp>'<dd>Mark all non-split and non-trimmed blocks inside the rescue domain as
+     <br><dt>`<samp><span class="samp">-T</span></samp>'<dt>`<samp><span class="samp">--try-again</span></samp>'<dd>Mark all non-split and non-trimmed blocks inside the rescue domain as
 non-tried before beginning the rescue. Try this if the drive stops
 responding and ddrescue immediately starts splitting failed blocks when
 restarted. If `<samp><span class="samp">--retrim</span></samp>' is also specified, mark all failed blocks
 inside the rescue domain as non-tried.
 
-     <br><dt>`<samp><span class="samp">--verbose</span></samp>'<dt>`<samp><span class="samp">-v</span></samp>'<dd>Verbose mode.
+     <br><dt>`<samp><span class="samp">-v</span></samp>'<dt>`<samp><span class="samp">--verbose</span></samp>'<dd>Verbose mode.
 
    </dl>
 
@@ -460,7 +449,7 @@ is one of these:
 
 <p class="noindent">And here is an example logfile:
 
-<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.13<br>
+<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.14<br>
 # Command line: ddrescue /dev/fd0 fdimage logfile<br>
 # current_pos  current_status<br>
 0x00120000     ?<br>
@@ -655,11 +644,11 @@ multiple of sector size. Ddrescue can't determine the size of a raw
 device, so a explicit `<samp><span class="samp">--max-size</span></samp>' or `<samp><span class="samp">--complete-only</span></samp>' option
 is needed.
 
-   <p>Using direct disc access, or reading from a raw device, may be slower
-than normal cached reading for hard discs (but faster for floppies). In
-this case you may want to make a first pass using normal cached reads,
-and use direct disc access, or a raw device, only to recover the good
-sectors inside the failed blocks.
+   <p>Using direct disc access, or reading from a raw device, may be slower or
+faster than normal cached reading depending on your OS and hardware. In
+case it is slower you may want to make a first pass using normal cached
+reads and use direct disc access, or a raw device, only to recover the
+good sectors inside the failed blocks.
 
    <pre class="sp">
 
@@ -867,5 +856,5 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
 <li><a href="#index-raw-devices-11">raw devices</a>: <a href="#Direct-Disc-Access">Direct Disc Access</a></li>
 <li><a href="#index-usage-6">usage</a>: <a href="#Invoking-ddrescue">Invoking ddrescue</a></li>
 <li><a href="#index-version-7">version</a>: <a href="#Invoking-ddrescue">Invoking ddrescue</a></li>
-   </ul></body></html>
+</ul></body></html>
 
