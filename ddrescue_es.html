@@ -26,6 +26,13 @@ datos de un fichero o un dispositivo de bloques (disco duro, cdrom,
 etc) a otro, intentando recuperar los datos en caso de producirse
 errores de lectura.
 <p>
+Ddrescuelog es una herramienta que manipula logfiles producidos por
+ddrescue, muestra su contenido, convierte logfiles a/de otros formatos,
+compara logfiles, verifica el estado de un rescate, y puede borrar un
+logfile si el rescate está completo. Las operaciones de ddrescuelog se
+pueden restringir a una o varias partes del logfile si se usan las
+opciones de delimitación de dominio.
+<p>
 La operación básica de ddrescue es totalmente automática. Es decir, no
 es necesario esperar a que se produzca un error, parar el programa,
 leer las anotaciones, ejecutarlo en modo inverso, etc.
@@ -52,8 +59,10 @@ Ddrescue recomienda
 <a href="http://www.nongnu.org/lzip/lzip_es.html">lzip</a> para
 comprimir las copias de seguridad, por su fiabilidad y capacidades de
 recuperación de datos, incluyendo la combinación de copias con
-comprobación de errores. La combinación ddrescue + lziprecover es la
-mejor opción para recuperar datos a partir de varias copias dañadas.
+comprobación de errores. La combinación ddrescue +
+<a href="http://www.nongnu.org/lzip/lziprecover.html">lziprecover</a>
+es la mejor opción para recuperar datos a partir de varias copias
+dañadas.
 <p>
 El logfile es salvado periódicamente en disco. De modo que en caso de
 bloqueo puede reanudarse el rescate sin apenas recopiado.
@@ -152,7 +161,7 @@ Floor, Boston, MA 02110-1301 USA
 Se permite la copia literal y la distribución de este artículo en su
 totalidad a través de cualquier medio, siempre que se mantenga esta nota.
 <p>
-Updated: $Date: 2010/12/07 17:29:36 $ $Author: antonio $
+Updated: $Date: 2011/11/22 16:26:08 $ $Author: antonio $
 </p>
 <hr>
 </body>

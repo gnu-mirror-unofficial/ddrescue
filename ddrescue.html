@@ -21,16 +21,22 @@
 
 <h4>Introduction</h4>
 
-GNU ddrescue is a data recovery tool. It copies data from one file or block
-device (hard disc, cdrom, etc) to another, trying hard to rescue data in
-case of read errors.
+GNU ddrescue is a data recovery tool. It copies data from one file or
+block device (hard disc, cdrom, etc) to another, trying hard to rescue
+data in case of read errors.
 <p>
-The basic operation of ddrescue is fully automatic. That is, you don't have
-to wait for an error, stop the program, read the log, run it in reverse
-mode, etc.
+Ddrescuelog is a tool that manipulates ddrescue logfiles, shows logfile
+contents, converts logfiles to/from other formats, compares logfiles,
+tests rescue status, and can delete a logfile if the rescue is done.
+Ddrescuelog operations can be restricted to one or several parts of the
+logfile if the domain setting options are used.
+<p>
+The basic operation of ddrescue is fully automatic. That is, you don't
+have to wait for an error, stop the program, read the log, run it in
+reverse mode, etc.
 <p>
 If you use the logfile feature of ddrescue, the data is rescued very
-efficiently (only the needed blocks are read). Also you can interrupt
+efficiently, (only the needed blocks are read). Also you can interrupt
 the rescue at any time and resume it later at the same point.
 <p>
 Ddrescue does not write zeros to the output when it finds bad sectors in
@@ -49,8 +55,9 @@ successive copies.
 Ddrescue recommends <a href="http://www.nongnu.org/lzip/lzip.html">lzip</a>
 for compression of backups, because of its reliability and data recovery
 capabilities, including error-checked merging of backup copies. The
-combination ddrescue + lziprecover is the best option for recovering
-data from multiple damaged copies.
+combination ddrescue +
+<a href="http://www.nongnu.org/lzip/lziprecover.html">lziprecover</a>
+is the best option for recovering data from multiple damaged copies.
 <p>
 Recordable CD and DVD media keep their data only for a finite time
 (typically for many years). After that time, data loss develops slowly
@@ -159,7 +166,7 @@ Floor, Boston, MA 02110-1301 USA
 Verbatim copying and distribution of this entire article is
 permitted in any medium, provided this notice is preserved.
 <p>
-Updated: $Date: 2011/09/12 15:27:58 $ $Author: antonio $
+Updated: $Date: 2011/11/22 16:26:08 $ $Author: antonio $
 </p>
 <hr>
 </body>
