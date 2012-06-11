@@ -30,7 +30,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
 
 <h2 class="unnumbered">GNU ddrescue Manual</h2>
 
-<p>This manual is for GNU ddrescue (version 1.15, 1 January 2012).
+<p>This manual is for GNU ddrescue (version 1.16, 11 June 2012).
 
 <ul class="menu">
 <li><a accesskey="1" href="#Introduction">Introduction</a>:           Purpose and features of GNU ddrescue
@@ -74,8 +74,8 @@ block device (hard disc, cdrom, etc) to another, trying hard to rescue
 data in case of read errors.
 
    <p>The basic operation of ddrescue is fully automatic. That is, you don't
-have to wait for an error, stop the program, read the log, run it in
-reverse mode, etc.
+have to wait for an error, stop the program, read the log, run it
+backwards, etc.
 
    <p>If you use the logfile feature of ddrescue, the data is rescued very
 efficiently, (only the needed blocks are read). Also you can interrupt
@@ -233,12 +233,12 @@ different areas of the input file, and for multiple recovery attempts
 over different subsets. See this example:
 
 <p class="noindent">Rescue the most important part of the disc first.
-<pre class="example">     ddrescue -i0 -s50M /dev/hdc hdimage logfile
-     ddrescue -i0 -s1M -d -r3 /dev/hdc hdimage logfile
+<pre class="example">     ddrescue -i0 -s50MiB /dev/hdc hdimage logfile
+     ddrescue -i0 -s1MiB -d -r3 /dev/hdc hdimage logfile
 </pre>
    <p class="noindent">Then rescue some key disc areas.
-<pre class="example">     ddrescue -i30G -s10G /dev/hdc hdimage logfile
-     ddrescue -i230G -s5G /dev/hdc hdimage logfile
+<pre class="example">     ddrescue -i30GiB -s10GiB /dev/hdc hdimage logfile
+     ddrescue -i230GiB -s5GiB /dev/hdc hdimage logfile
 </pre>
    <p class="noindent">Now rescue the rest (does not recopy what is already done).
 <pre class="example">     ddrescue /dev/hdc hdimage logfile
@@ -272,13 +272,19 @@ read rate falls below this value, ddrescue will skip ahead a variable
 amount depending on rate and error history. The skipped blocks are tried
 in additional passes (before trimming) where the minimum read rate is
 divided by ten before each pass, until there are no more non-tried
-blocks left. If <var>bytes</var> is 0, the minimum read rate is calculated
-for each block read as (average_rate&nbsp;/&nbsp;10)<!-- /@w -->.
+blocks left. If <var>bytes</var> is 0 (auto), the minimum read rate is
+recalculated for each block read as (average_rate&nbsp;/&nbsp;10)<!-- /@w -->.
 
      <p>Note that specifying a minimum read rate above the posibilities of the
 input device will result in a very low average rate because all reads
 will be considered slow reads and continuous skipping will occur. This
 will also make the logfile grow disproportionately.
+
+     <br><dt>`<samp><span class="samp">-A</span></samp>'<dt>`<samp><span class="samp">--try-again</span></samp>'<dd>Mark all non-split and non-trimmed blocks inside the rescue domain as
+non-tried before beginning the rescue. Try this if the drive stops
+responding and ddrescue immediately starts splitting failed blocks when
+restarted. If `<samp><span class="samp">--retrim</span></samp>' is also specified, mark all failed blocks
+inside the rescue domain as non-tried.
 
      <br><dt>`<samp><span class="samp">-b </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--block-size=</span><var>bytes</var></samp>'<dd>Sector (hardware block) size of input device in bytes (usually 512 for
 hard discs and 3.5" floppies, 1024 for 5.25" floppies, and 2048 for
@@ -287,7 +293,7 @@ cdroms). Defaults to 512.
      <br><dt>`<samp><span class="samp">-B</span></samp>'<dt>`<samp><span class="samp">--binary-prefixes</span></samp>'<dd>Show units with binary prefixes (powers of 1024).<br>
 SI prefixes (powers of 1000) are used by default. (See table below).
 
-     <br><dt>`<samp><span class="samp">-c </span><var>sectors</var></samp>'<dt>`<samp><span class="samp">--cluster-size=</span><var>sectors</var></samp>'<dd>Number of sectors to copy at a time. Defaults to 64KiB&nbsp;/&nbsp;sector_size<!-- /@w -->. 
+     <br><dt>`<samp><span class="samp">-c </span><var>sectors</var></samp>'<dt>`<samp><span class="samp">--cluster-size=</span><var>sectors</var></samp>'<dd>Number of sectors to copy at a time. Defaults to 64&nbsp;KiB&nbsp;/&nbsp;sector_size<!-- /@w -->. 
 Try smaller values for slow drives. The number of sectors per track (18
 or 9) is a good value for floppies.
 
@@ -316,8 +322,11 @@ infinity. If <var>n</var> is preceded by `<samp><span class="samp">+</span></sam
 error areas found in this run, not counting those already annotated in
 the <var>logfile</var>.
 
-     <br><dt>`<samp><span class="samp">-E </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--max-error-rate=</span><var>bytes</var></samp>'<dd>Maximum growth per second of error size, in bytes, allowed before giving
-up. Defaults to infinity.
+     <br><dt>`<samp><span class="samp">-E </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--max-error-rate=</span><var>bytes</var></samp>'<dd>Maximum rate of errors allowed before giving up, in bytes per second. 
+Defaults to infinity. The rate being measured is that of actually failed
+reads, so the rescue may finish because of this rate being exceeded even
+if the total error size (errsize) does not change because the areas
+being tried are already marked as errors.
 
      <br><dt>`<samp><span class="samp">-f</span></samp>'<dt>`<samp><span class="samp">--force</span></samp>'<dd>Force overwrite of <var>outfile</var>. Needed when <var>outfile</var> is not a
 regular file, but a device or partition.
@@ -342,8 +351,15 @@ See the chapter Fill Mode (see <a href="#Fill-Mode">Fill Mode</a>) for details.
      <br><dt>`<samp><span class="samp">-I</span></samp>'<dt>`<samp><span class="samp">--verify-input-size</span></samp>'<dd>Compare the size of <var>infile</var> with the size calculated from the list
 of blocks contained in the <var>logfile</var>, and exit with status 1 if they
 differ. This is not enabled by default because the size of some devices
-can't be known and because the size derived from the <var>logfile</var> may
-be incomplete, for example after doing a partial rescue.
+can't be known in advance and because the size derived from the
+<var>logfile</var> may be incomplete, for example after doing a partial
+rescue.
+
+     <br><dt>`<samp><span class="samp">-K </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--skip-size=</span><var>bytes</var></samp>'<dd>Set the initial size to skip on the first read error or slow read. The
+value given will be rounded to the next multiple of sector size. For
+subsequent read errors or slow reads, ddrescue will modify the skip size
+depending on error rate and error history. Valid values range from 64 KiB
+to 1 GiB. Defaults to 64 KiB.
 
      <br><dt>`<samp><span class="samp">-m </span><var>file</var></samp>'<dt>`<samp><span class="samp">--domain-logfile=</span><var>file</var></samp>'<dd>Restrict the rescue domain to the blocks marked as finished in the
 logfile <var>file</var>. This is useful if the destination drive fails during
@@ -375,9 +391,8 @@ infinity. Every bad sector is tried only one time per pass. To retry bad
 sectors detected on a previous run, you must specify a non-zero number
 of retries.
 
-     <br><dt>`<samp><span class="samp">-R</span></samp>'<dt>`<samp><span class="samp">--reverse</span></samp>'<dd>Reverse direction of all copy operations. This means the copy of the
-non-tried blocks, splitting and retrying are run backwards, while
-trimming is run forwards.
+     <br><dt>`<samp><span class="samp">-R</span></samp>'<dt>`<samp><span class="samp">--reverse</span></samp>'<dd>Reverse direction of all copy operations. This makes copying, splitting
+and retrying to be run backwards, and trimming to be run forwards.
 
      <br><dt>`<samp><span class="samp">-s </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--max-size=</span><var>bytes</var></samp>'<dd>Maximum size of the input data to be copied, in bytes. If ddrescue can't
 determine the size of the input device, you may need to specify it with
@@ -395,13 +410,13 @@ Not all systems support this. Only regular files can be sparse.
      <br><dt>`<samp><span class="samp">-t</span></samp>'<dt>`<samp><span class="samp">--truncate</span></samp>'<dd>Truncate <var>outfile</var> to zero size before writing to it. Only works for
 regular files, not for drives or partitions.
 
-     <br><dt>`<samp><span class="samp">-T</span></samp>'<dt>`<samp><span class="samp">--try-again</span></samp>'<dd>Mark all non-split and non-trimmed blocks inside the rescue domain as
-non-tried before beginning the rescue. Try this if the drive stops
-responding and ddrescue immediately starts splitting failed blocks when
-restarted. If `<samp><span class="samp">--retrim</span></samp>' is also specified, mark all failed blocks
-inside the rescue domain as non-tried.
+     <br><dt>`<samp><span class="samp">-T </span><var>interval</var></samp>'<dt>`<samp><span class="samp">--timeout=</span><var>interval</var></samp>'<dd>Maximum time since last successful read allowed before giving up. 
+Defaults to infinity. <var>interval</var> is a rational number (like 1.5 or
+1/2) optionally followed by one of `<samp><span class="samp">s</span></samp>', `<samp><span class="samp">m</span></samp>', `<samp><span class="samp">h</span></samp>' or
+`<samp><span class="samp">d</span></samp>', meaning seconds, minutes, hours and days respectively. If no
+unit is specified, it defaults to seconds.
 
-     <br><dt>`<samp><span class="samp">-v</span></samp>'<dt>`<samp><span class="samp">--verbose</span></samp>'<dd>Verbose mode.
+     <br><dt>`<samp><span class="samp">-v</span></samp>'<dt>`<samp><span class="samp">--verbose</span></samp>'<dd>Verbose mode. Further -v's (up to 4) increase the verbosity level.
 
      <br><dt>`<samp><span class="samp">-x </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--extend-outfile=</span><var>bytes</var></samp>'<dd>Extend the size of <var>outfile</var> to make it at least <var>bytes</var> long. 
 If the size of <var>outfile</var> is already equal or longer than <var>bytes</var>
@@ -496,7 +511,7 @@ is one of these:
 
 <p class="noindent">And here is an example logfile:
 
-<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.15<br>
+<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.16<br>
 # Command line: ddrescue /dev/fd0 fdimage logfile<br>
 # current_pos  current_status<br>
 0x00120000     ?<br>
@@ -529,7 +544,7 @@ those things to, in order to use it safely.
 
    <p>A failing drive tends to develop more and more errors as time passes. 
 Because of this, you should rescue the data from a drive as soon as you
-notice the first error. Be diligent because every time a physicaly
+notice the first error. Be diligent because every time a physically
 damaged drive powers up and is able to output some data, it may be the
 very last time that it ever will.
 
@@ -659,7 +674,7 @@ stops responding and disappears from /dev.
 
 <pre class="example">     ddrescue -f -n /dev/hda /dev/hdb logfile      &lt;-- /dev/hda fails here
        (restart /dev/hda or reboot computer as many times as needed)
-     ddrescue -f -n -T /dev/hda /dev/hdb logfile
+     ddrescue -f -n -A /dev/hda /dev/hdb logfile
      ddrescue -d -f -r3 /dev/hda /dev/hdb logfile
 </pre>
    <div class="node">
@@ -775,7 +790,7 @@ examined in an hex editor. For example, the following command line fills
 all blocks marked as `<samp><span class="samp">-</span></samp>' (bad-sector) with copies of the string
 `<samp><span class="samp">BAD&nbsp;SECTOR&nbsp;</span></samp>'<!-- /@w -->:
 
-<pre class="example">     echo -n "BAD SECTOR " &gt; tmpfile
+<pre class="example">     printf "BAD SECTOR " &gt; tmpfile
      ddrescue --fill=- tmpfile outfile logfile
 </pre>
    <p class="noindent">Example 2: Wipe only the good sectors, leaving the bad sectors alone. 
@@ -821,7 +836,7 @@ file with zeros to restore the disc image.
 <p class="noindent">Example 4: Figure out what files are in the bad areas of the disc.
 
 <pre class="example">     ddrescue -b2048 /dev/cdrom cdimage logfile
-     echo -n "DEADBEEF" &gt; tmpfile
+     printf "DEADBEEF" &gt; tmpfile
      ddrescue --fill=- tmpfile cdimage logfile
      rm tmpfile
      mount -t iso9660 -o loop,ro cdimage /mnt/cdimage
@@ -1030,7 +1045,7 @@ original input file.
 summary can be restricted to one or several parts of <var>logfile</var> if
 the domain setting options are used.
 
-     <br><dt>`<samp><span class="samp">-v</span></samp>'<dt>`<samp><span class="samp">--verbose</span></samp>'<dd>Verbose mode.
+     <br><dt>`<samp><span class="samp">-v</span></samp>'<dt>`<samp><span class="samp">--verbose</span></samp>'<dd>Verbose mode. Further -v's (up to 4) increase the verbosity level.
 
      <br><dt>`<samp><span class="samp">-x </span><var>file</var></samp>'<dt>`<samp><span class="samp">--xor-logfile=</span><var>file</var></samp>'<dd>Perform a logical XOR (exclusive OR) operation between the finished
 blocks in <var>file</var> and those in <var>logfile</var>, and write the resulting
