@@ -45,19 +45,21 @@ every time you run it on the same output file, it tries to fill in the
 gaps without wiping out the data already rescued.
 <p>
 Automatic merging of backups: If you have two or more damaged copies of
-a file, cdrom, etc, and run ddrescue on all of them, one at a time,
-with the same output file, you will probably obtain a complete and
-error-free file. This is so because the probability of having damaged
-areas at the same places on different input files is very low. Using
-the logfile, only the needed blocks are read from the second and
-successive copies.
+a file, cdrom, etc, and run ddrescue on all of them, one at a time, with
+the same output file, you will probably obtain a complete and error-free
+file. This is so because the probability of having the same area damaged
+in all copies is very low. Using the logfile, only the needed blocks are
+read from the second and successive copies.
 <p>
 Ddrescue recommends <a href="http://www.nongnu.org/lzip/lzip.html">lzip</a>
-for compression of backups, because of its reliability and data recovery
-capabilities, including error-checked merging of backup copies. The
-combination ddrescue +
-<a href="http://www.nongnu.org/lzip/lziprecover.html">lziprecover</a>
-is the best option for recovering data from multiple damaged copies.
+for compression of backups because the lzip format has been designed for
+long-term data archiving.
+<a href="http://www.nongnu.org/lzip/lziprecover.html">Lziprecover</a>
+makes lzip files resistant to bit-flip (one of the most common forms of
+data corruption), and provides data recovery capabilities including
+error-checked merging of backup copies. The combination ddrescue +
+lziprecover is the best option for recovering data from multiple damaged
+copies.
 <p>
 Recordable CD and DVD media keep their data only for a finite time
 (typically for many years). After that time, data loss develops slowly
@@ -172,7 +174,7 @@ Floor, Boston, MA 02110-1301 USA
 Verbatim copying and distribution of this entire article is
 permitted in any medium, provided this notice is preserved.
 <p>
-Updated: $Date: 2013/04/01 18:41:36 $ $Author: antonio $
+Updated: $Date: 2013/07/12 15:15:23 $ $Author: antonio $
 </p>
 <hr>
 </body>
