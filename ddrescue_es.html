@@ -37,9 +37,10 @@ La operación básica de ddrescue es totalmente automática. Es decir, no
 es necesario esperar a que se produzca un error, parar el programa,
 leer las anotaciones, ejecutarlo en modo inverso, etc.
 <p>
-Si se usa el fichero de anotaciones (logfile) de ddrescue, los datos
-son recuperados muy eficientemente. Además se puede interrumpir el
-rescate en cualquier momento y reanudarlo después en el mismo punto.
+Si se usa el fichero de anotaciones (logfile) de ddrescue, los datos son
+recuperados muy eficientemente, (sólo se leen los bloques necesarios).
+Además se puede interrumpir el rescate en cualquier momento y reanudarlo
+después en el mismo punto.
 <p>
 Ddrescue no escribe ceros en la salida cuando encuentra errores en la
 entrada, ni trunca el fichero de salida si no se le pide. De este modo
@@ -50,20 +51,20 @@ Fusión automática de copias de seguridad: Si se tienen dos o más copias
 dañadas de un mismo fichero, cdrom, etc, y se ejecuta ddrescue en todas
 ellas, una cada vez, sobre el mismo fichero de salida, se obtendrá
 probablemente un fichero completo y libre de errores. Esto es así porque
-la probabilidad de tener la misma área dañada en todas las copias es muy
+la probabilidad de tener la misma área dañada en todas las copias es
 baja. Usando el fichero de anotaciones (logfile), sólo se leen los
 bloques que se necesiten de la segunda copia y sucesivas.
 <p>
 Ddrescue recomienda
 <a href="http://www.nongnu.org/lzip/lzip_es.html">lzip</a> para
-comprimir copias de seguridad porque el formato lzip ha sido diseñado
-para el archivo de datos a largo plazo.
-<a href="http://www.nongnu.org/lzip/lziprecover.html">Lziprecover</a>
-hace los ficheros lzip resistentes a la inversión de un bit (una de las
-formas más comunes de corrupción de datos), y proporciona capacidades de
-recuperación de datos que incluyen la fusión de copias de seguridad con
-comprobación de errores. La combinación ddrescue + lziprecover es la
-mejor opción para recuperar datos a partir de varias copias dañadas.
+comprimir copias de seguridad porque el formato lzip está diseñado para
+el archivo de datos a largo plazo y proporciona capacidades de
+recuperación de datos que complementan muy bien las de ddrescue. Si la
+causa de la corrupción del fichero es un soporte físico dañado, la
+combinación ddrescue +
+<a href="http://www.nongnu.org/lzip/lziprecover.html">lziprecover</a>
+es la mejor opción para recuperar datos a partir de varias copias
+dañadas.
 <p>
 El logfile es salvado periódicamente en disco. De modo que en caso de
 bloqueo puede reanudarse el rescate sin apenas recopiado.
@@ -162,7 +163,7 @@ Floor, Boston, MA 02110-1301 USA
 Se permite la copia literal y la distribución de este artículo en su
 totalidad a través de cualquier medio, siempre que se mantenga esta nota.
 <p>
-Updated: $Date: 2013/07/12 15:15:23 $ $Author: antonio $
+Updated: $Date: 2013/08/03 15:23:23 $ $Author: antonio $
 </p>
 <hr>
 </body>
