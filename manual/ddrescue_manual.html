@@ -30,7 +30,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
 
 <h2 class="unnumbered">GNU ddrescue Manual</h2>
 
-<p>This manual is for GNU ddrescue (version 1.17, 9 July 2013).
+<p>This manual is for GNU ddrescue (version 1.18-pre1, 5 August 2013).
 
 <ul class="menu">
 <li><a accesskey="1" href="#Introduction">Introduction</a>:           Purpose and features of GNU ddrescue
@@ -88,21 +88,20 @@ every time you run it on the same output file, it tries to fill in the
 gaps without wiping out the data already rescued.
 
    <p>Automatic merging of backups: If you have two or more damaged copies of
-a file, cdrom, etc, and run ddrescue on all of them, one at a time,
-with the same output file, you will probably obtain a complete and
-error-free file. This is so because the probability of having damaged
-areas at the same places on different input files is very low. Using
-the logfile, only the needed blocks are read from the second and
-successive copies.
+a file, cdrom, etc, and run ddrescue on all of them, one at a time, with
+the same output file, you will probably obtain a complete and error-free
+file. This is so because the probability of having the same area damaged
+in all copies is low. Using the logfile, only the needed blocks are read
+from the second and successive copies.
 
-   <p>Ddrescue recommends lzip for compression of backups because of its
-reliability and data recovery capabilities, including error-checked
-merging of backup copies. Lziprecover makes lzip files resistant to
-bit-flip, one of the most common forms of data corruption, and its
-recovery capabilities contribute to make of the lzip format one of the
-best formats for long-term data archiving. The combination ddrescue +
-lziprecover is the best option for recovering data from multiple damaged
-copies. See <a href="#lziprecover_002dexample">lziprecover-example</a>, for an example.
+   <p>Ddrescue recommends lzip for compression of backups because the lzip
+format is designed for long-term data archiving and provides data
+recovery capabilities which nicely complement those of ddrescue. 
+(Ddrescue fills unreadable sectors with data from other copies, while
+lziprecover corrects corrupt sectors with data from other copies). If
+the cause of file corruption is damaged media, the combination ddrescue
++ lziprecover is the best option for recovering data from multiple
+damaged copies. See <a href="#lziprecover_002dexample">lziprecover-example</a>, for an example.
 
    <p>Recordable CD and DVD media keep their data only for a finite time
 (typically for many years). After that time, data loss develops slowly
@@ -380,7 +379,7 @@ one or more of the status characters defined in the chapter Logfile
 Structure (see <a href="#Logfile-structure">Logfile structure</a>). See the chapter Fill mode
 (see <a href="#Fill-mode">Fill mode</a>) for a complete description of the fill mode.
 
-     <br><dt>`<samp><span class="samp">-g</span></samp>'<dt>`<samp><span class="samp">--generate-mode</span></samp>'<dd>Generate an approximate <var>logfile</var> from the <var>infile</var> and
+     <br><dt>`<samp><span class="samp">-G</span></samp>'<dt>`<samp><span class="samp">--generate-mode</span></samp>'<dd>Generate an approximate <var>logfile</var> from the <var>infile</var> and
 <var>outfile</var> of the original rescue run. Note that you must keep the
 original offset between `<samp><span class="samp">--input-position</span></samp>' and
 `<samp><span class="samp">--output-position</span></samp>' of the original rescue run. See the chapter
@@ -477,12 +476,24 @@ If the size of <var>outfile</var> is already equal or longer than <var>bytes</va
 then this option does nothing. Use this option to guarantee a minimum
 size for <var>outfile</var>. Only regular files can be extended.
 
+     <br><dt>`<samp><span class="samp">-1 </span><var>file</var></samp>'<dt>`<samp><span class="samp">--log-rates=</span><var>file</var></samp>'<dd>Log rates and error sizes every second into <var>file</var>. Every time the
+screen is updated with new details, some of those details (time, input
+position, current and average rates, number of errors and error size)
+are written to <var>file</var>. This allows a posterior analysis of the drive
+to see if it has any weak zones (areas where the transfer rate drops
+well below the sustained average).
+
+     <br><dt>`<samp><span class="samp">-2 </span><var>file</var></samp>'<dt>`<samp><span class="samp">--log-reads=</span><var>file</var></samp>'<dd>Log all read operations into <var>file</var>. Every read attempt and its
+result (position, size, copied size and error size) is written to
+<var>file</var>. A line is also written at the beginning of each phase
+(copying, trimming, splitting and retrying). Finally, a line with a time
+mark is written every second (unless the read takes more time). Use this
+option with caution because <var>file</var> may become very large very
+quickly.
+
    </dl>
 
-   <pre class="sp">
-
-</pre>
-Numbers given as arguments to options (positions, sizes, retries, etc)
+   <p>Numbers given as arguments to options (positions, sizes, retries, etc)
 may be followed by a multiplier and an optional `<samp><span class="samp">B</span></samp>' for "byte".
 
    <p>Table of SI and binary prefixes (unit multipliers):
@@ -565,7 +576,7 @@ is one of these:
 
 <p class="noindent">And here is an example logfile:
 
-<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.17<br>
+<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.18-pre1<br>
 # Command line: ddrescue /dev/fd0 fdimage logfile<br>
 # current_pos  current_status<br>
 0x00120000     ?<br>
@@ -739,7 +750,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
 <h2 class="chapter">8 Direct disc access</h2>
 
 <p><a name="index-direct-disc-access-11"></a><a name="index-raw-devices-12"></a>
-If you notice that the positions and sizes in the log file are ALWAYS
+If you notice that the positions and sizes in the logfile are ALWAYS
 multiples of the sector size, maybe your kernel is caching the disc
 accesses and grouping them. In this case you may want to use direct disc
 access or a raw device to bypass the kernel cache and rescue more of
@@ -1140,7 +1151,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
 
 </div>
 
-<h2 class="chapter">13 Reporting Bugs</h2>
+<h2 class="chapter">13 Reporting bugs</h2>
 
 <p><a name="index-bugs-17"></a><a name="index-getting-help-18"></a>
 There are probably bugs in ddrescue. There are certainly errors and
