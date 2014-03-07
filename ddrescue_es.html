@@ -22,9 +22,9 @@
 <h4>Introducción</h4>
 
 GNU ddrescue es una herramienta de recuperación de datos. Copia los
-datos de un fichero o un dispositivo de bloques (disco duro, cdrom,
-etc) a otro, intentando recuperar los datos en caso de producirse
-errores de lectura.
+datos de un fichero o un dispositivo de bloques (disco duro, cdrom, etc)
+a otro, intentando recuperar primero las partes no dañadas en caso de
+producirse errores de lectura.
 <p>
 Ddrescuelog es una herramienta que manipula logfiles producidos por
 ddrescue, muestra su contenido, convierte logfiles a/de otros formatos,
@@ -35,7 +35,7 @@ opciones de delimitación de dominio.
 <p>
 La operación básica de ddrescue es totalmente automática. Es decir, no
 es necesario esperar a que se produzca un error, parar el programa,
-leer las anotaciones, ejecutarlo en modo inverso, etc.
+leer las anotaciones, ejecutarlo de nuevo desde otra posición, etc.
 <p>
 Si se usa el fichero de anotaciones (logfile) de ddrescue, los datos son
 recuperados muy eficientemente, (sólo se leen los bloques necesarios).
@@ -59,9 +59,11 @@ Ddrescue recomienda
 <a href="http://www.nongnu.org/lzip/lzip_es.html">lzip</a> para
 comprimir copias de seguridad porque el formato lzip está diseñado para
 el archivo de datos a largo plazo y proporciona capacidades de
-recuperación de datos que complementan muy bien las de ddrescue. Si la
-causa de la corrupción del fichero es un soporte físico dañado, la
-combinación ddrescue +
+recuperación de datos que complementan muy bien las de ddrescue.
+(Ddrescue rellena los sectores ilegibles con datos de otras copias,
+mientras que lziprecover corrige los sectores corrompidos con datos de
+otras copias). Si la causa de la corrupción del fichero es un soporte
+físico dañado, la combinación ddrescue +
 <a href="http://www.nongnu.org/lzip/lziprecover.html">lziprecover</a>
 es la mejor opción para recuperar datos a partir de varias copias
 dañadas.
@@ -77,6 +79,11 @@ Ddrescue también proporciona un "modo de llenado" (fill mode) capaz de
 sobreescribir selectivamente partes del fichero de salida, lo que tiene
 algunos usos interesantes como borrar datos, marcar áreas defectuosas o
 incluso, en algunos casos, "reparar" sectores dañados.
+<p>
+Una de las grandes fortalezas de ddrescue es que es independiente del
+interfaz, y por tanto puede ser usado con cualquier clase de dispositivo
+soportado por el kernel (ATA, SATA, SCSI, antiguos discos MFM,
+disquetes, o incluso tarjetas de memoria como las SD).
 </p>
 
 <h4>Documentación</h4>
@@ -102,8 +109,7 @@ conseguir Software GNU</a>. La última versión publicada será la versión
 más reciente disponible en <a href="http://ftp.gnu.org/gnu/ddrescue/">
 http://ftp.gnu.org/gnu/ddrescue/</a>.
 <p>
-Puedes encontrar versiones antiguas y (si las hay) versiones beta para
-probar en
+Puedes encontrar versiones antiguas y versiones beta para probar en
 <a href="http://download.savannah.gnu.org/releases/ddrescue/">
 http://download.savannah.gnu.org/releases/ddrescue/</a>.
 </p>
@@ -124,8 +130,8 @@ Un archivo de la lista de correo está disponible en
 
 <h4>Cómo Ayudar</h4>
 
-Para contactar con los mantenedores, tanto para informar sobre un error
-(bug) como para contribuir soluciones o mejoras, envía un mensaje a
+Para contactar con el autor, tanto para informar sobre un error (bug)
+como para contribuir soluciones o mejoras, envía un mensaje a
 <a href="mailto:bug-ddrescue@gnu.org"><em>bug-ddrescue@gnu.org</em></a>.
 Por favor, envía los mensajes como texto llano. Si envías parches, hazlo
 en formato diff unificado (diff -u) sobre la última versión. Incluye una
@@ -157,13 +163,13 @@ envía tus comentarios sobre las páginas de www.gnu.org en general a
 envía las demás cuestiones a
 <a href="mailto:gnu@gnu.org"><em>gnu@gnu.org</em></a>.
 <p>
-Copyright &copy; 2013 Free Software Foundation, Inc., 51 Franklin St, Fifth
+Copyright &copy; 2014 Free Software Foundation, Inc., 51 Franklin St, Fifth
 Floor, Boston, MA 02110-1301 USA
 <p>
 Se permite la copia literal y la distribución de este artículo en su
 totalidad a través de cualquier medio, siempre que se mantenga esta nota.
 <p>
-Updated: $Date: 2013/08/03 15:23:23 $ $Author: antonio $
+Updated: $Date: 2014/03/07 13:07:01 $ $Author: antonio $
 </p>
 <hr>
 </body>

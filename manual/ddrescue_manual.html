@@ -3,7 +3,7 @@
 <title>GNU ddrescue Manual</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15">
 <meta name="description" content="GNU ddrescue Manual">
-<meta name="generator" content="makeinfo 4.8">
+<meta name="generator" content="makeinfo 4.13+">
 <link title="Top" rel="top" href="#Top">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <meta http-equiv="Content-Style-Type" content="text/css">
@@ -21,8 +21,8 @@
 </head>
 <body>
 <div class="node">
-<p><hr>
 <a name="Top"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Introduction">Introduction</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
 
@@ -30,7 +30,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
 
 <h2 class="unnumbered">GNU ddrescue Manual</h2>
 
-<p>This manual is for GNU ddrescue (version 1.18-pre2, 14 August 2013).
+<p>This manual is for GNU ddrescue (version 1.18-pre6, 1 November 2013).
 
 <ul class="menu">
 <li><a accesskey="1" href="#Introduction">Introduction</a>:           Purpose and features of GNU ddrescue
@@ -59,8 +59,8 @@ Copyright &copy; 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011,
 to copy, distribute and modify it.
 
 <div class="node">
-<p><hr>
 <a name="Introduction"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Basic-concepts">Basic concepts</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Top">Top</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
@@ -121,8 +121,8 @@ data, marking bad areas or even, in some cases, "repair" damaged
 sectors.
 
 <div class="node">
-<p><hr>
 <a name="Basic-concepts"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Important-advice">Important advice</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Introduction">Introduction</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
@@ -155,8 +155,8 @@ digital audio" CDs can't, "video CDs"[1] maybe.<br>
 [1] http://en.wikipedia.org/wiki/Video_CD
 
      <br><dt>Rescue domain<dd>Block or set of blocks to be acted upon (rescued, listed, etc). You can
-define it with the options `<samp><span class="samp">--input-position</span></samp>', `<samp><span class="samp">--size</span></samp>' and
-`<samp><span class="samp">--domain-logfile</span></samp>'. The rescue domain defaults to the whole input
+define it with the options '<samp><span class="samp">--input-position</span></samp>', '<samp><span class="samp">--size</span></samp>' and
+'<samp><span class="samp">--domain-logfile</span></samp>'. The rescue domain defaults to the whole input
 file or logfile.
 
      <br><dt>Sector<dd>Hardware block. Smallest accessible amount of data on a device.
@@ -164,8 +164,8 @@ file or logfile.
    </dl>
 
 <div class="node">
-<p><hr>
 <a name="Important-advice"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Algorithm">Algorithm</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Basic-concepts">Basic concepts</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
@@ -200,8 +200,8 @@ partitions should be hidden before allowing them to be touched by any
 operating system that tries to mount and "fix" the partitions it sees.
 
 <div class="node">
-<p><hr>
 <a name="Algorithm"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Invoking-ddrescue">Invoking ddrescue</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Important-advice">Important advice</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
@@ -213,9 +213,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
 <p><a name="index-algorithm-4"></a>
 GNU ddrescue is not a derivative of dd, nor is related to dd in any way
 except in that both can be used for copying data from one device to
-another. The difference is that ddrescue uses a sophisticated algorithm
-to copy data from failing drives causing them as little additional
-damage as possible.
+another. The key difference is that ddrescue uses a sophisticated
+algorithm to copy data from failing drives causing them as little
+additional damage as possible.
 
    <p>Ddrescue manages efficiently the status of the rescue in progress and
 tries to rescue the good parts first, scheduling reads inside bad (or
@@ -258,16 +258,18 @@ that block as non-split. Repeat until there are no more non-trimmed
 blocks.
 
    <p>4) (Third phase; Splitting) Read forwards one sector at a time from the
-center of the largest non-split block, until a bad sector is found. Then
-read backwards one sector at a time from the center of the same block,
-until a bad sector is found. If the logfile is larger than
-`<samp><span class="samp">--logfile-size</span></samp>', read the smallest non-split blocks until the
-number of entries in the logfile drops below `<samp><span class="samp">--logfile-size</span></samp>'. 
-Repeat until all remaining non-split blocks have less than 5 sectors. 
-Then read the remaining non-split blocks sequentially.
+center of the largest non-split block, until a bad sector is found. 
+Then, if the bad sector found is not the first one tried, read backwards
+one sector at a time from the center of the same block, until a bad
+sector is found. If the logfile is larger than '<samp><span class="samp">--logfile-size</span></samp>',
+read the smallest non-split blocks until the number of entries in the
+logfile drops below '<samp><span class="samp">--logfile-size</span></samp>'. Repeat until all remaining
+non-split blocks have less than 5 sectors. Then read the remaining
+non-split blocks sequentially.
 
    <p>5) (Fourth phase; Retrying) Optionally try to read again the bad sectors
-until the specified number of retries is reached.
+until the specified number of retry passes is reached. Every bad sector
+is tried only once in each pass.
 
    <p>6) Optionally write a logfile for later use.
 
@@ -298,8 +300,8 @@ over different subsets. See this example:
      ddrescue -d -r3 /dev/hdc hdimage logfile
 </pre>
    <div class="node">
-<p><hr>
 <a name="Invoking-ddrescue"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Logfile-structure">Logfile structure</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Algorithm">Algorithm</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
@@ -316,44 +318,46 @@ The format for running ddrescue is:
    <p>ddrescue supports the following options:
 
      <dl>
-<dt>`<samp><span class="samp">-h</span></samp>'<dt>`<samp><span class="samp">--help</span></samp>'<dd>Print an informative help message describing the options and exit.
+<dt>'<samp><span class="samp">-h</span></samp>'<dt>'<samp><span class="samp">--help</span></samp>'<dd>Print an informative help message describing the options and exit.
 
-     <br><dt>`<samp><span class="samp">-V</span></samp>'<dt>`<samp><span class="samp">--version</span></samp>'<dd>Print the version number of ddrescue on the standard output and exit.
+     <br><dt>'<samp><span class="samp">-V</span></samp>'<dt>'<samp><span class="samp">--version</span></samp>'<dd>Print the version number of ddrescue on the standard output and exit.
 
-     <br><dt>`<samp><span class="samp">-a </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--min-read-rate=</span><var>bytes</var></samp>'<dd>Minimum read rate of good non-tried areas, in bytes per second. If the
+     <br><dt>'<samp><span class="samp">-a </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--min-read-rate=</span><var>bytes</var></samp>'<dd>Minimum read rate of good non-tried areas, in bytes per second. If the
 read rate falls below this value, ddrescue will skip ahead a variable
 amount depending on rate and error histories. The skipped blocks are
 tried in additional passes (before trimming) where the minimum read rate
 is divided by ten before each pass, until there are no more non-tried
-blocks left. If <var>bytes</var> is 0 (auto), the minimum read rate is
-recalculated for each block read as (average_rate&nbsp;/&nbsp;10)<!-- /@w -->. Values
-above device capabilities will be ignored.
+blocks left.
 
-     <br><dt>`<samp><span class="samp">-A</span></samp>'<dt>`<samp><span class="samp">--try-again</span></samp>'<dd>Mark all non-split and non-trimmed blocks inside the rescue domain as
+     <p>If <var>bytes</var> is 0 (auto), the minimum read rate is recalculated for
+each block as (average_rate&nbsp;/&nbsp;10)<!-- /@w -->. Values above device capabilities
+are ignored.
+
+     <br><dt>'<samp><span class="samp">-A</span></samp>'<dt>'<samp><span class="samp">--try-again</span></samp>'<dd>Mark all non-split and non-trimmed blocks inside the rescue domain as
 non-tried before beginning the rescue. Try this if the drive stops
 responding and ddrescue immediately starts splitting failed blocks when
-restarted. If `<samp><span class="samp">--retrim</span></samp>' is also specified, mark all failed blocks
+restarted. If '<samp><span class="samp">--retrim</span></samp>' is also specified, mark all failed blocks
 inside the rescue domain as non-tried.
 
-     <br><dt>`<samp><span class="samp">-b </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--sector-size=</span><var>bytes</var></samp>'<dd>Sector (hardware block) size of input device in bytes (usually 512 for
+     <br><dt>'<samp><span class="samp">-b </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--sector-size=</span><var>bytes</var></samp>'<dd>Sector (hardware block) size of input device in bytes (usually 512 for
 hard discs and 3.5" floppies, 1024 for 5.25" floppies, and 2048 for
 cdroms). Defaults to 512.
 
-     <br><dt>`<samp><span class="samp">-B</span></samp>'<dt>`<samp><span class="samp">--binary-prefixes</span></samp>'<dd>Show units with binary prefixes (powers of 1024).<br>
+     <br><dt>'<samp><span class="samp">-B</span></samp>'<dt>'<samp><span class="samp">--binary-prefixes</span></samp>'<dd>Show units with binary prefixes (powers of 1024).<br>
 SI prefixes (powers of 1000) are used by default. (See table below).
 
-     <br><dt>`<samp><span class="samp">-c </span><var>sectors</var></samp>'<dt>`<samp><span class="samp">--cluster-size=</span><var>sectors</var></samp>'<dd>Number of sectors to copy at a time. Defaults to 64&nbsp;KiB&nbsp;/&nbsp;sector_size<!-- /@w -->. 
+     <br><dt>'<samp><span class="samp">-c </span><var>sectors</var></samp>'<dt>'<samp><span class="samp">--cluster-size=</span><var>sectors</var></samp>'<dd>Number of sectors to copy at a time. Defaults to 64&nbsp;KiB&nbsp;/&nbsp;sector_size<!-- /@w -->. 
 Try smaller values for slow drives. The number of sectors per track (18
 or 9) is a good value for floppies.
 
-     <br><dt>`<samp><span class="samp">-C</span></samp>'<dt>`<samp><span class="samp">--complete-only</span></samp>'<dd>Limit rescue domain to the blocks listed in the <var>logfile</var>. Do not
+     <br><dt>'<samp><span class="samp">-C</span></samp>'<dt>'<samp><span class="samp">--complete-only</span></samp>'<dd>Limit rescue domain to the blocks listed in the <var>logfile</var>. Do not
 read new data beyond <var>logfile</var> limits. This is useful when reading
 from devices of undefined size (like raw devices), when the drive
 returns an incorrect size, or when reading from a partial copy. It can
 only be used after a first rescue attempt, possibly limited with the
-`<samp><span class="samp">--size</span></samp>' option, has produced a complete <var>logfile</var>.
+'<samp><span class="samp">--size</span></samp>' option, has produced a complete <var>logfile</var>.
 
-     <br><dt>`<samp><span class="samp">-d</span></samp>'<dt>`<samp><span class="samp">--direct</span></samp>'<dd>Use direct disc access to read from <var>infile</var>, bypassing the kernel
+     <br><dt>'<samp><span class="samp">-d</span></samp>'<dt>'<samp><span class="samp">--direct</span></samp>'<dd>Use direct disc access to read from <var>infile</var>, bypassing the kernel
 cache. (Open the file with the O_DIRECT flag). Use it only on devices or
 partitions, not on regular files. Sector size must be correctly set for
 this to work. Not all systems support this.
@@ -362,49 +366,49 @@ this to work. Not all systems support this.
 you. If the sector size is not correctly set, all reads will result in
 errors, and no data will be rescued.
 
-     <br><dt>`<samp><span class="samp">-D</span></samp>'<dt>`<samp><span class="samp">--synchronous</span></samp>'<dd>Use synchronous writes for <var>outfile</var>. (Issue a fsync call after
+     <br><dt>'<samp><span class="samp">-D</span></samp>'<dt>'<samp><span class="samp">--synchronous</span></samp>'<dd>Use synchronous writes for <var>outfile</var>. (Issue a fsync call after
 every write). May be useful when forcing the drive to remap its bad
 sectors.
 
-     <br><dt>`<samp><span class="samp">-e [+]</span><var>n</var></samp>'<dt>`<samp><span class="samp">--max-errors=[+]</span><var>n</var></samp>'<dd>Maximum number of error areas allowed before giving up. Defaults to
-infinity. If <var>n</var> is preceded by `<samp><span class="samp">+</span></samp>' the number refers to new
+     <br><dt>'<samp><span class="samp">-e [+]</span><var>n</var></samp>'<dt>'<samp><span class="samp">--max-errors=[+]</span><var>n</var></samp>'<dd>Maximum number of error areas allowed before giving up. Defaults to
+infinity. If <var>n</var> is preceded by '<samp><span class="samp">+</span></samp>' the number refers to new
 error areas found in this run, not counting those already annotated in
 the <var>logfile</var>.
 
-     <br><dt>`<samp><span class="samp">-E </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--max-error-rate=</span><var>bytes</var></samp>'<dd>Maximum rate of errors allowed before giving up, in bytes per second. 
+     <br><dt>'<samp><span class="samp">-E </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--max-error-rate=</span><var>bytes</var></samp>'<dd>Maximum rate of errors allowed before giving up, in bytes per second. 
 Defaults to infinity. The rate being measured is that of actually failed
 reads, so the rescue may finish because of this rate being exceeded even
 if the total error size (errsize) does not change because the areas
 being tried are already marked as errors.
 
-     <br><dt>`<samp><span class="samp">-f</span></samp>'<dt>`<samp><span class="samp">--force</span></samp>'<dd>Force overwrite of <var>outfile</var>. Needed when <var>outfile</var> is not a
+     <br><dt>'<samp><span class="samp">-f</span></samp>'<dt>'<samp><span class="samp">--force</span></samp>'<dd>Force overwrite of <var>outfile</var>. Needed when <var>outfile</var> is not a
 regular file, but a device or partition.
 
-     <br><dt>`<samp><span class="samp">-F </span><var>types</var></samp>'<dt>`<samp><span class="samp">--fill-mode=</span><var>types</var></samp>'<dd>Fill the blocks in <var>outfile</var> specified as any of <var>types</var> in
+     <br><dt>'<samp><span class="samp">-F </span><var>types</var></samp>'<dt>'<samp><span class="samp">--fill-mode=</span><var>types</var></samp>'<dd>Fill the blocks in <var>outfile</var> specified as any of <var>types</var> in
 <var>logfile</var>, with data read from <var>infile</var>. <var>types</var> contains
 one or more of the status characters defined in the chapter Logfile
-Structure (see <a href="#Logfile-structure">Logfile structure</a>). See the chapter Fill mode
+structure (see <a href="#Logfile-structure">Logfile structure</a>). See the chapter Fill mode
 (see <a href="#Fill-mode">Fill mode</a>) for a complete description of the fill mode.
 
-     <br><dt>`<samp><span class="samp">-G</span></samp>'<dt>`<samp><span class="samp">--generate-mode</span></samp>'<dd>Generate an approximate <var>logfile</var> from the <var>infile</var> and
+     <br><dt>'<samp><span class="samp">-G</span></samp>'<dt>'<samp><span class="samp">--generate-mode</span></samp>'<dd>Generate an approximate <var>logfile</var> from the <var>infile</var> and
 <var>outfile</var> of the original rescue run. Note that you must keep the
-original offset between `<samp><span class="samp">--input-position</span></samp>' and
-`<samp><span class="samp">--output-position</span></samp>' of the original rescue run. See the chapter
+original offset between '<samp><span class="samp">--input-position</span></samp>' and
+'<samp><span class="samp">--output-position</span></samp>' of the original rescue run. See the chapter
 Generate mode (see <a href="#Generate-mode">Generate mode</a>) for a complete description of the
 generate mode.
 
-     <br><dt>`<samp><span class="samp">-i </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--input-position=</span><var>bytes</var></samp>'<dd>Starting position in <var>infile</var>, in bytes. Defaults to 0. In fill mode
+     <br><dt>'<samp><span class="samp">-i </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--input-position=</span><var>bytes</var></samp>'<dd>Starting position in <var>infile</var>, in bytes. Defaults to 0. In fill mode
 it refers to a position in the <var>infile</var> of the original rescue run. 
 See the chapter Fill mode (see <a href="#Fill-mode">Fill mode</a>) for details.
 
-     <br><dt>`<samp><span class="samp">-I</span></samp>'<dt>`<samp><span class="samp">--verify-input-size</span></samp>'<dd>Compare the size of <var>infile</var> with the size calculated from the list
+     <br><dt>'<samp><span class="samp">-I</span></samp>'<dt>'<samp><span class="samp">--verify-input-size</span></samp>'<dd>Compare the size of <var>infile</var> with the size calculated from the list
 of blocks contained in the <var>logfile</var>, and exit with status 1 if they
 differ. This is not enabled by default because the size of some devices
 can't be known in advance and because the size derived from the
 <var>logfile</var> may be incomplete, for example after doing a partial
 rescue.
 
-     <br><dt>`<samp><span class="samp">-K </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--skip-size=</span><var>bytes</var></samp>'<dd>Set the initial size to skip on the first read error or slow read. The
+     <br><dt>'<samp><span class="samp">-K </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--skip-size=</span><var>bytes</var></samp>'<dd>Set the initial size to skip on the first read error or slow read. The
 value given will be rounded to the next multiple of sector size. The
 skip size will be doubled for each read error or slow read until it
 reaches 1% of the size of <var>infile</var> or 1 GiB (whichever is smaller),
@@ -414,45 +418,63 @@ has large error areas at regular intervals, you can increase the initial
 skip size with this option. Valid values range from 64 KiB to 1 GiB. 
 Defaults to 64 KiB.
 
-     <br><dt>`<samp><span class="samp">-l </span><var>entries</var></samp>'<dt>`<samp><span class="samp">--logfile-size=</span><var>entries</var></samp>'<dd>During the splitting phase, do not grow logfile beyond this number of
+     <br><dt>'<samp><span class="samp">-l </span><var>entries</var></samp>'<dt>'<samp><span class="samp">--logfile-size=</span><var>entries</var></samp>'<dd>During the splitting phase, do not grow logfile beyond this number of
 entries. Logfile may be larger if it was larger at startup or if it
 became larger during the copying or trimming phases. Defaults to 1000. 
 (Each entry is about 26-30 bytes in size).
 
-     <br><dt>`<samp><span class="samp">-m </span><var>file</var></samp>'<dt>`<samp><span class="samp">--domain-logfile=</span><var>file</var></samp>'<dd>Restrict the rescue domain to the blocks marked as finished in the
-logfile <var>file</var>. This is useful if the destination drive fails during
-the rescue.
+     <br><dt>'<samp><span class="samp">-L</span></samp>'<dt>'<samp><span class="samp">--loose-domain</span></samp>'<dd>Accept a incomplete synthetic (user fabricated) domain logfile and fill
+the gaps with non-tried blocks. The blocks in the logfile must be
+strictly ascending and non-overlapping, but they do not need to be
+contiguous. This option allows making quick edits to a logfile without
+all the size calculations involved in making all data blocks contiguous
+again.
 
-     <br><dt>`<samp><span class="samp">-M</span></samp>'<dt>`<samp><span class="samp">--retrim</span></samp>'<dd>Mark all failed blocks inside the rescue domain as non-trimmed before
-beginning the rescue. The effect is similar to `<samp><span class="samp">--retries=1</span></samp>', but
-the bad sectors are tried in a different order, making perhaps possible
-to rescue some of them.
+     <br><dt>'<samp><span class="samp">-m </span><var>file</var></samp>'<dt>'<samp><span class="samp">--domain-logfile=</span><var>file</var></samp>'<dd>Restrict the rescue domain to the blocks marked as finished in the
+logfile <var>file</var>. This is useful for merging partially recovered
+images of backups, or if the destination drive fails during the rescue.
 
-     <br><dt>`<samp><span class="samp">-n</span></samp>'<dt>`<samp><span class="samp">--no-split</span></samp>'<dd>Skip the splitting phase. Avoids spending a lot of time trying to rescue
+     <br><dt>'<samp><span class="samp">-M</span></samp>'<dt>'<samp><span class="samp">--retrim</span></samp>'<dd>Mark all failed blocks inside the rescue domain as non-trimmed before
+beginning the rescue. The effect is similar to '<samp><span class="samp">--retry-passes=1</span></samp>',
+but the bad sectors are tried in a different order, making perhaps
+possible to rescue some of them.
+
+     <br><dt>'<samp><span class="samp">-n</span></samp>'<dt>'<samp><span class="samp">--no-split</span></samp>'<dd>Skip the splitting phase. Avoids spending a lot of time trying to rescue
 the most difficult parts of the file.
 
-     <br><dt>`<samp><span class="samp">-o </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--output-position=</span><var>bytes</var></samp>'<dd>Starting position in <var>outfile</var>, in bytes. Defaults to
-`<samp><span class="samp">--input-position</span></samp>'. The bytes below <var>bytes</var> aren't touched if
+     <br><dt>'<samp><span class="samp">-N</span></samp>'<dt>'<samp><span class="samp">--no-trim</span></samp>'<dd>Skip the trimming phase. Specially useful in the first parts of a
+multi-part rescue.
+
+     <br><dt>'<samp><span class="samp">-o </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--output-position=</span><var>bytes</var></samp>'<dd>Starting position in <var>outfile</var>, in bytes. Defaults to
+'<samp><span class="samp">--input-position</span></samp>'. The bytes below <var>bytes</var> aren't touched if
 they exist and truncation is not requested. Else they are set to 0.
 
-     <br><dt>`<samp><span class="samp">-p</span></samp>'<dt>`<samp><span class="samp">--preallocate</span></samp>'<dd>Preallocate space on disc for <var>outfile</var>. Only space for regular
+     <br><dt>'<samp><span class="samp">-O</span></samp>'<dt>'<samp><span class="samp">--reopen-on-error</span></samp>'<dd>Close the input file and then reopen it after every read error and, if
+'<samp><span class="samp">--min-read-rate</span></samp>' is set, after every slow read encountered both
+during the copying phase (i.e., every time ddrescue skips ahead). Use
+this option if you notice a permanent drop in transfer rate after
+finding read errors or slow areas. But be warned that most probably the
+slowing-down is intentionally caused by the kernel in an attempt to
+increase the probability of reading data from the device.
+
+     <br><dt>'<samp><span class="samp">-p</span></samp>'<dt>'<samp><span class="samp">--preallocate</span></samp>'<dd>Preallocate space on disc for <var>outfile</var>. Only space for regular
 files can be preallocated. If preallocation succeeds, rescue will not
 fail due to lack of free space on disc. If ddrescue can't determine the
 size to preallocate, you may need to specify it with some combination of
-the `<samp><span class="samp">--input-position</span></samp>', `<samp><span class="samp">--output-position</span></samp>', `<samp><span class="samp">--size</span></samp>',
-and `<samp><span class="samp">--domain-logfile</span></samp>' options.
+the '<samp><span class="samp">--input-position</span></samp>', '<samp><span class="samp">--output-position</span></samp>', '<samp><span class="samp">--size</span></samp>',
+and '<samp><span class="samp">--domain-logfile</span></samp>' options.
 
-     <br><dt>`<samp><span class="samp">-q</span></samp>'<dt>`<samp><span class="samp">--quiet</span></samp>'<dd>Quiet operation. Suppress all messages.
+     <br><dt>'<samp><span class="samp">-q</span></samp>'<dt>'<samp><span class="samp">--quiet</span></samp>'<dd>Quiet operation. Suppress all messages.
 
-     <br><dt>`<samp><span class="samp">-r </span><var>n</var></samp>'<dt>`<samp><span class="samp">--retries=</span><var>n</var></samp>'<dd>Exit after given number of retry passes. Defaults to 0. -1 means
-infinity. Every bad sector is tried only one time per pass. To retry bad
+     <br><dt>'<samp><span class="samp">-r </span><var>n</var></samp>'<dt>'<samp><span class="samp">--retry-passes=</span><var>n</var></samp>'<dd>Exit after given number of retry passes. Defaults to 0. -1 means
+infinity. Every bad sector is tried only once in each pass. To retry bad
 sectors detected on a previous run, you must specify a non-zero number
-of retries.
+of retry passes.
 
-     <br><dt>`<samp><span class="samp">-R</span></samp>'<dt>`<samp><span class="samp">--reverse</span></samp>'<dd>Reverse direction of copying, retrying, and the sequential part of
+     <br><dt>'<samp><span class="samp">-R</span></samp>'<dt>'<samp><span class="samp">--reverse</span></samp>'<dd>Reverse direction of copying, retrying, and the sequential part of
 splitting, running them backwards from the end of the input file.
 
-     <br><dt>`<samp><span class="samp">-s </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--size=</span><var>bytes</var></samp>'<dd>Maximum size of the input data to be copied, in bytes. If ddrescue can't
+     <br><dt>'<samp><span class="samp">-s </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--size=</span><var>bytes</var></samp>'<dd>Maximum size of the input data to be copied, in bytes. If ddrescue can't
 determine the size of the input device, you may need to specify it with
 this option. Note that this option specifies the size of the input data
 to be copied, not the size of the resulting <var>outfile</var>. So, for
@@ -460,34 +482,34 @@ example, the following command creates an <var>outfile</var> 300 bytes long,
 but only writes data on the last 200 bytes:
 
      <pre class="example">          ddrescue -i 100 -s 200 infile outfile logfile
-     </pre>
-     <br><dt>`<samp><span class="samp">-S</span></samp>'<dt>`<samp><span class="samp">--sparse</span></samp>'<dd>Use sparse writes for <var>outfile</var>. (The blocks of zeros are not
+</pre>
+     <br><dt>'<samp><span class="samp">-S</span></samp>'<dt>'<samp><span class="samp">--sparse</span></samp>'<dd>Use sparse writes for <var>outfile</var>. (The blocks of zeros are not
 actually allocated on disc). May save a lot of disc space in some cases. 
 Not all systems support this. Only regular files can be sparse.
 
-     <br><dt>`<samp><span class="samp">-t</span></samp>'<dt>`<samp><span class="samp">--truncate</span></samp>'<dd>Truncate <var>outfile</var> to zero size before writing to it. Only works for
+     <br><dt>'<samp><span class="samp">-t</span></samp>'<dt>'<samp><span class="samp">--truncate</span></samp>'<dd>Truncate <var>outfile</var> to zero size before writing to it. Only works for
 regular files, not for drives or partitions.
 
-     <br><dt>`<samp><span class="samp">-T </span><var>interval</var></samp>'<dt>`<samp><span class="samp">--timeout=</span><var>interval</var></samp>'<dd>Maximum time since last successful read allowed before giving up. 
+     <br><dt>'<samp><span class="samp">-T </span><var>interval</var></samp>'<dt>'<samp><span class="samp">--timeout=</span><var>interval</var></samp>'<dd>Maximum time since last successful read allowed before giving up. 
 Defaults to infinity. <var>interval</var> is a rational number (like 1.5 or
-1/2) optionally followed by one of `<samp><span class="samp">s</span></samp>', `<samp><span class="samp">m</span></samp>', `<samp><span class="samp">h</span></samp>' or
-`<samp><span class="samp">d</span></samp>', meaning seconds, minutes, hours and days respectively. If no
+1/2) optionally followed by one of '<samp><span class="samp">s</span></samp>', '<samp><span class="samp">m</span></samp>', '<samp><span class="samp">h</span></samp>' or
+'<samp><span class="samp">d</span></samp>', meaning seconds, minutes, hours and days respectively. If no
 unit is specified, it defaults to seconds.
 
-     <br><dt>`<samp><span class="samp">-v</span></samp>'<dt>`<samp><span class="samp">--verbose</span></samp>'<dd>Verbose mode. Further -v's (up to 4) increase the verbosity level.
+     <br><dt>'<samp><span class="samp">-v</span></samp>'<dt>'<samp><span class="samp">--verbose</span></samp>'<dd>Verbose mode. Further -v's (up to 4) increase the verbosity level.
 
-     <br><dt>`<samp><span class="samp">-w</span></samp>'<dt>`<samp><span class="samp">--ignore-write-errors</span></samp>'<dd>Make fill mode ignore write errors. This is useful to avoid ddrescue
+     <br><dt>'<samp><span class="samp">-w</span></samp>'<dt>'<samp><span class="samp">--ignore-write-errors</span></samp>'<dd>Make fill mode ignore write errors. This is useful to avoid ddrescue
 exiting because of new errors developing while wiping the good sectors
 of a failing drive. Fill mode normally writes to <var>outfile</var> one
 cluster at a time. With this option, after the first write error is
 found in an area, the rest of that area is filled sector by sector.
 
-     <br><dt>`<samp><span class="samp">-x </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--extend-outfile=</span><var>bytes</var></samp>'<dd>Extend the size of <var>outfile</var> to make it at least <var>bytes</var> long. 
+     <br><dt>'<samp><span class="samp">-x </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--extend-outfile=</span><var>bytes</var></samp>'<dd>Extend the size of <var>outfile</var> to make it at least <var>bytes</var> long. 
 If the size of <var>outfile</var> is already equal or longer than <var>bytes</var>
 then this option does nothing. Use this option to guarantee a minimum
 size for <var>outfile</var>. Only regular files can be extended.
 
-     <br><dt>`<samp><span class="samp">-1 </span><var>file</var></samp>'<dt>`<samp><span class="samp">--log-rates=</span><var>file</var></samp>'<dd>Log rates and error sizes every second in <var>file</var>. Every time the
+     <br><dt>'<samp><span class="samp">-1 </span><var>file</var></samp>'<dt>'<samp><span class="samp">--log-rates=</span><var>file</var></samp>'<dd>Log rates and error sizes every second in <var>file</var>. Every time the
 screen is updated with new details, some of those details (time, input
 position, current and average rates, number of errors and error size)
 are written to <var>file</var> in a format usable by plotting utilities like
@@ -495,17 +517,19 @@ gnuplot. This allows a posterior analysis of the drive to see if it has
 any weak zones (areas where the transfer rate drops well below the
 sustained average).
 
-     <br><dt>`<samp><span class="samp">-2 </span><var>file</var></samp>'<dt>`<samp><span class="samp">--log-reads=</span><var>file</var></samp>'<dd>Log all read operations in <var>file</var>. Every read attempt and its result
+     <br><dt>'<samp><span class="samp">-2 </span><var>file</var></samp>'<dt>'<samp><span class="samp">--log-reads=</span><var>file</var></samp>'<dd>Log all read operations in <var>file</var>. Every read attempt and its result
 (position, size, copied size and error size) is written to <var>file</var>. A
 line is also written at the beginning of each phase (copying, trimming,
 splitting and retrying). Finally, a line with a time mark is written
 every second (unless the read takes more time). Use this option with
-caution because <var>file</var> may become very large very quickly.
+caution because <var>file</var> may become very large very quickly. Use
+'<samp><span class="samp">lzip -7</span></samp>' to compress <var>file</var> if you need to store or transmit
+it.
 
    </dl>
 
-   <p>Numbers given as arguments to options (positions, sizes, retries, etc)
-may be followed by a multiplier and an optional `<samp><span class="samp">B</span></samp>' for "byte".
+   <p>Numbers given as arguments to options (positions, sizes, rates, etc) may
+be followed by a multiplier and an optional '<samp><span class="samp">B</span></samp>' for "byte".
 
    <p>Table of SI and binary prefixes (unit multipliers):
 
@@ -530,8 +554,8 @@ invalid input file, 3 for an internal consistency error (eg, bug) which
 caused ddrescue to panic.
 
 <div class="node">
-<p><hr>
 <a name="Logfile-structure"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Examples">Examples</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Invoking-ddrescue">Invoking ddrescue</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
@@ -543,11 +567,11 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
 <p><a name="index-logfile-structure-9"></a>
 The logfile is a text file easy to read and edit. It is formed by three
 parts, the heading comments, the status line, and the list of data
-blocks. Any line beginning with `<samp><span class="samp">#</span></samp>' is a comment line.
+blocks. Any line beginning with '<samp><span class="samp">#</span></samp>' is a comment line.
 
    <p>NOTE: Logfiles generated by a version of ddrescue prior to 1.6 lack the
 status line. If you want to use an old logfile with ddrescue 1.6 or
-later, you will have to insert a line like `<samp><span class="samp">0 +</span></samp>' at the beginning
+later, you will have to insert a line like '<samp><span class="samp">0 +</span></samp>' at the beginning
 of the logfile.
 
    <p>The heading comments contain the version of ddrescue and the command
@@ -587,7 +611,7 @@ is one of these:
 
 <p class="noindent">And here is an example logfile:
 
-<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.18-pre2<br>
+<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.18-pre6<br>
 # Command line: ddrescue /dev/fd0 fdimage logfile<br>
 # current_pos  current_status<br>
 0x00120000     ?<br>
@@ -603,8 +627,8 @@ is one of these:
 using the same syntax that integer constants in C++.
 
 <div class="node">
-<p><hr>
 <a name="Examples"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Direct-disc-access">Direct disc access</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Logfile-structure">Logfile structure</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
@@ -680,7 +704,8 @@ Example 3: Rescue a CD-ROM in /dev/cdrom.
 
 <pre class="example">     ddrescue -n -b2048 /dev/cdrom cdimage logfile
      ddrescue -d -b2048 /dev/cdrom cdimage logfile
-       (write cdimage to a blank CD-ROM)
+       (if errsize is zero, cdimage now contains a complete image of the
+        CD-ROM and you can write it to a blank CD-ROM)
 </pre>
    <pre class="sp">
 
@@ -691,13 +716,25 @@ Example 4: Rescue a CD-ROM in /dev/cdrom from two copies.
      ddrescue -d -b2048 /dev/cdrom cdimage logfile
        (insert second copy in the CD drive)
      ddrescue -d -r1 -b2048 /dev/cdrom cdimage logfile
-       (write cdimage to a blank CD-ROM)
+       (if errsize is zero, cdimage now contains a complete image of the
+        CD-ROM and you can write it to a blank CD-ROM)
 </pre>
    <pre class="sp">
 
 </pre>
-<a name="lziprecover_002dexample"></a>
-Example 5: Rescue a lzip compressed backup from two copies on CD-ROM
+Example 5: Merge the partially recovered images of 3 identical DVDs
+using their logfiles as domain logfiles.
+
+<pre class="example">     ddrescue -m logfile1 dvdimage1 dvdimage logfile
+     ddrescue -m logfile2 dvdimage2 dvdimage logfile
+     ddrescue -m logfile3 dvdimage3 dvdimage logfile
+       (if errsize is zero, dvdimage now contains a complete image of the DVD
+        and you can write it to a blank DVD)
+</pre>
+   <pre class="sp">
+
+</pre>
+<a name="lziprecover_002dexample"></a>Example 6: Rescue a lzip compressed backup from two copies on CD-ROM
 with error-checked merging of copies
 (See the
 <a href="http://www.nongnu.org/lzip/manual/lziprecover_manual.html">lziprecover manual</a>
@@ -717,7 +754,7 @@ for details about lziprecover).
    <pre class="sp">
 
 </pre>
-Example 6: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hda
+Example 7: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hda
 freezes up at position 12345678.
 
 <pre class="example">     ddrescue -f /dev/hda /dev/hdb logfile       &lt;-- /dev/hda freezes here
@@ -730,7 +767,7 @@ freezes up at position 12345678.
    <pre class="sp">
 
 </pre>
-Example 7: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hdb
+Example 8: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hdb
 fails and you have to rescue data to a third drive, /dev/hdc.
 
 <pre class="example">     ddrescue -f -n /dev/hda /dev/hdb logfile1     &lt;-- /dev/hdb fails here
@@ -741,7 +778,7 @@ fails and you have to rescue data to a third drive, /dev/hdc.
    <pre class="sp">
 
 </pre>
-Example 8: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hda
+Example 9: While rescuing the whole drive /dev/hda to /dev/hdb, /dev/hda
 stops responding and disappears from /dev.
 
 <pre class="example">     ddrescue -f -n /dev/hda /dev/hdb logfile      &lt;-- /dev/hda fails here
@@ -750,8 +787,8 @@ stops responding and disappears from /dev.
      ddrescue -d -f -r3 /dev/hda /dev/hdb logfile
 </pre>
    <div class="node">
-<p><hr>
 <a name="Direct-disc-access"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Fill-mode">Fill mode</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Examples">Examples</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
@@ -767,12 +804,12 @@ accesses and grouping them. In this case you may want to use direct disc
 access or a raw device to bypass the kernel cache and rescue more of
 your data.
 
-   <p>NOTE! Sector size must be correctly set with the `<samp><span class="samp">--sector-size</span></samp>'
+   <p>NOTE! Sector size must be correctly set with the '<samp><span class="samp">--sector-size</span></samp>'
 option for this to work. Only whole sectors can be read; both
-`<samp><span class="samp">--input-position</span></samp>' and `<samp><span class="samp">--size</span></samp>' must be a multiple of sector
+'<samp><span class="samp">--input-position</span></samp>' and '<samp><span class="samp">--size</span></samp>' must be a multiple of sector
 size.
 
-   <p>Try the `<samp><span class="samp">--direct</span></samp>' option first. If direct disc access is not
+   <p>Try the '<samp><span class="samp">--direct</span></samp>' option first. If direct disc access is not
 available in your system, try raw devices. Read your system
 documentation to find how to bind a raw device to a regular block
 device. Some OSs provide raw access through special device names, like
@@ -782,8 +819,8 @@ device. Some OSs provide raw access through special device names, like
 for direct disc access or to read from raw devices. For efficiency
 reasons, also aligns it to the memory page size if page size is a
 multiple of sector size. On some systems, ddrescue can't determine the
-size of a raw device, so an explicit `<samp><span class="samp">--size</span></samp>' or
-`<samp><span class="samp">--complete-only</span></samp>' option may be needed.
+size of a raw device, so an explicit '<samp><span class="samp">--size</span></samp>' or
+'<samp><span class="samp">--complete-only</span></samp>' option may be needed.
 
    <p>Using direct disc access, or reading from a raw device, may be slower or
 faster than normal cached reading depending on your OS and hardware. In
@@ -814,8 +851,8 @@ Example 2: using a raw device.
      mount -t ext2 -o ro /dev/hdc1 /mnt
 </pre>
    <div class="node">
-<p><hr>
 <a name="Fill-mode"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Generate-mode">Generate mode</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Direct-disc-access">Direct disc access</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
@@ -825,13 +862,13 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
 <h2 class="chapter">9 Fill mode</h2>
 
 <p><a name="index-fill-Mode-13"></a>
-When ddrescue is invoked with the `<samp><span class="samp">--fill-mode</span></samp>' option it operates
+When ddrescue is invoked with the '<samp><span class="samp">--fill-mode</span></samp>' option it operates
 in "fill mode", which is different from the default "rescue mode". That
-is, if you use the `<samp><span class="samp">--fill-mode</span></samp>' option, ddrescue does not rescue
+is, if you use the '<samp><span class="samp">--fill-mode</span></samp>' option, ddrescue does not rescue
 anything. It only fills with data read from the input file the blocks of
 the output file whose status character from the logfile coincides with
 one of the type characters specified as argument to the
-`<samp><span class="samp">--fill-mode</span></samp>' option.
+'<samp><span class="samp">--fill-mode</span></samp>' option.
 
    <p>In fill mode the input file may have any size. If it is too small, the
 data will be duplicated as many times as necessary to fill the input
@@ -840,17 +877,17 @@ will be read. Then the same data will be written to every cluster or
 sector to be filled.
 
    <p>Note that in fill mode the input file is always read from position 0. If
-you specify a `<samp><span class="samp">--input-position</span></samp>', it refers to the original input
+you specify a '<samp><span class="samp">--input-position</span></samp>', it refers to the original input
 file from which the logfile was built, and is only used to calculate the
 offset between input and output positions.
 
    <p>Note also that when filling the input file of the original rescue run
-you should set `<samp><span class="samp">--input-position</span></samp>' and `<samp><span class="samp">--output-position</span></samp>' to
+you should set '<samp><span class="samp">--input-position</span></samp>' and '<samp><span class="samp">--output-position</span></samp>' to
 identical values, whereas when filling the output file of the original
 rescue run you should keep the original offset between
-`<samp><span class="samp">--input-position</span></samp>' and `<samp><span class="samp">--output-position</span></samp>'.
+'<samp><span class="samp">--input-position</span></samp>' and '<samp><span class="samp">--output-position</span></samp>'.
 
-   <p>The `<samp><span class="samp">--fill-mode</span></samp>' option implies the `<samp><span class="samp">--complete-only</span></samp>' option.
+   <p>The '<samp><span class="samp">--fill-mode</span></samp>' option implies the '<samp><span class="samp">--complete-only</span></samp>' option.
 
    <p>In fill mode the logfile is updated to allow resumability when
 interrupted or in case of a crash, but as nothing is being rescued the
@@ -864,8 +901,8 @@ The fill mode has a number of uses. See the following examples:
 
 <p class="noindent">Example 1: Mark parts of the rescued copy to allow finding them when
 examined in an hex editor. For example, the following command line fills
-all blocks marked as `<samp><span class="samp">-</span></samp>' (bad-sector) with copies of the string
-`<samp><span class="samp">BAD&nbsp;SECTOR&nbsp;</span></samp>'<!-- /@w -->:
+all blocks marked as '<samp><span class="samp">-</span></samp>' (bad-sector) with copies of the string
+'<samp><span class="samp">BAD&nbsp;SECTOR&nbsp;</span></samp>'<!-- /@w -->:
 
 <pre class="example">     printf "BAD SECTOR " &gt; tmpfile
      ddrescue --fill-mode=- tmpfile outfile logfile
@@ -894,8 +931,8 @@ system used, what files are partially or entirely in the bad areas of
 the disc. Just follow these steps:
 
    <p>1) Copy the damaged drive with ddrescue until finished. Do not use
-sparse writes. This yields a logfile with only finished (`<samp><span class="samp">+</span></samp>') and
-bad-sector (`<samp><span class="samp">-</span></samp>') blocks.
+sparse writes. This yields a logfile with only finished ('<samp><span class="samp">+</span></samp>') and
+bad-sector ('<samp><span class="samp">-</span></samp>') blocks.
 
    <p>2) Fill the bad-sector blocks of the copied drive or image file with a
 string not present in any file, for example "DEADBEEF".
@@ -922,8 +959,8 @@ file with zeros to restore the disc image.
      ddrescue --fill-mode=- /dev/zero cdimage logfile
 </pre>
    <div class="node">
-<p><hr>
 <a name="Generate-mode"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Ddrescuelog">Ddrescuelog</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Fill-mode">Fill mode</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
@@ -933,9 +970,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
 <h2 class="chapter">10 Generate mode</h2>
 
 <p><a name="index-generate-Mode-14"></a>
-NOTE: When ddrescue is invoked with the `<samp><span class="samp">--generate-mode</span></samp>' option it
+NOTE: When ddrescue is invoked with the '<samp><span class="samp">--generate-mode</span></samp>' option it
 operates in "generate mode", which is different from the default "rescue
-mode". That is, if you use the `<samp><span class="samp">--generate-mode</span></samp>' option, ddrescue
+mode". That is, if you use the '<samp><span class="samp">--generate-mode</span></samp>' option, ddrescue
 does not rescue anything. It only tries to generate a logfile for later
 use.
 
@@ -946,7 +983,7 @@ rescue; you have to restart it from the very beginning.
 
    <p>Or maybe you started copying a drive with <code>dd&nbsp;conv=noerror,sync</code><!-- /@w --> and are now in the same situation described above. 
 In this case, note that you can't use a copy made by dd unless it was
-invoked with the `<samp><span class="samp">sync</span></samp>' conversion argument.
+invoked with the '<samp><span class="samp">sync</span></samp>' conversion argument.
 
    <p>Don't despair (yet). Ddrescue can in some cases generate an approximate
 logfile, from the input file and the (partial) copy, that is almost as
@@ -969,12 +1006,12 @@ thus non-tried but non-zero.
 <pre class="example">     ddrescue --generate-mode infile outfile logfile
 </pre>
    <p class="noindent">Note that you must keep the original offset between
-`<samp><span class="samp">--input-position</span></samp>' and `<samp><span class="samp">--output-position</span></samp>' of the original
+'<samp><span class="samp">--input-position</span></samp>' and '<samp><span class="samp">--output-position</span></samp>' of the original
 rescue run.
 
 <div class="node">
-<p><hr>
 <a name="Ddrescuelog"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Invoking-ddrescuelog">Invoking ddrescuelog</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Generate-mode">Generate mode</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
@@ -1024,7 +1061,7 @@ Note: you do need to partition /dev/hdb beforehand.
 Example 3: Rescue a whole disc with two ext2 partitions in /dev/hda to
 /dev/hdb and repair the file systems using badblock lists generated with
 ddrescuelog. Disc sector size is 512, file system block size is 4096. 
-Arguments to options `<samp><span class="samp">-i</span></samp>' and `<samp><span class="samp">-s</span></samp>' are the starting positions
+Arguments to options '<samp><span class="samp">-i</span></samp>' and '<samp><span class="samp">-s</span></samp>' are the starting positions
 and sizes of the partitions being rescued.<br>
 Note: you do not need to partition /dev/hdb beforehand, but if the
 partition table on /dev/hda is damaged, you'll need to recreate it
@@ -1038,8 +1075,8 @@ somehow on /dev/hdb.
      e2fsck -v -f -L badblocks2 /dev/hdb2
 </pre>
    <div class="node">
-<p><hr>
 <a name="Invoking-ddrescuelog"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Problems">Problems</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Ddrescuelog">Ddrescuelog</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
@@ -1056,45 +1093,56 @@ The format for running ddrescuelog is:
    <p>Ddrescuelog supports the following options:
 
      <dl>
-<dt>`<samp><span class="samp">-h</span></samp>'<dt>`<samp><span class="samp">--help</span></samp>'<dd>Print an informative help message describing the options and exit.
+<dt>'<samp><span class="samp">-h</span></samp>'<dt>'<samp><span class="samp">--help</span></samp>'<dd>Print an informative help message describing the options and exit.
 
-     <br><dt>`<samp><span class="samp">-V</span></samp>'<dt>`<samp><span class="samp">--version</span></samp>'<dd>Print the version number of ddrescuelog on the standard output and exit.
+     <br><dt>'<samp><span class="samp">-V</span></samp>'<dt>'<samp><span class="samp">--version</span></samp>'<dd>Print the version number of ddrescuelog on the standard output and exit.
 
-     <br><dt>`<samp><span class="samp">-a </span><var>old_types</var><span class="samp">,</span><var>new_types</var></samp>'<dt>`<samp><span class="samp">--change-types=</span><var>old_types</var><span class="samp">,</span><var>new_types</var></samp>'<dd>Change the status of every block in the rescue domain from one type in
+     <br><dt>'<samp><span class="samp">-a </span><var>old_types</var><span class="samp">,</span><var>new_types</var></samp>'<dt>'<samp><span class="samp">--change-types=</span><var>old_types</var><span class="samp">,</span><var>new_types</var></samp>'<dd>Change the status of every block in the rescue domain from one type in
 <var>old_types</var> to the corresponding type in <var>new_types</var>, much like
-the `<samp><span class="samp">tr</span></samp>' command does, and write the resulting logfile to standard
+the '<samp><span class="samp">tr</span></samp>' command does, and write the resulting logfile to standard
 output. <var>old_types</var> and <var>new_types</var> are strings of block status
 characters as defined in the chapter Logfile structure (see <a href="#Logfile-structure">Logfile structure</a>). Blocks whose status is not in <var>old_types</var> are left
 unchanged. If <var>new_types</var> is shorter than <var>old_types</var> the last
 type of <var>new_types</var> is repeated as many times as necessary.
 
-     <br><dt>`<samp><span class="samp">-b </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--block-size=</span><var>bytes</var></samp>'<dd>Block size used by ddrescuelog. Depending on the requested operation it
+     <br><dt>'<samp><span class="samp">-b </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--block-size=</span><var>bytes</var></samp>'<dd>Block size used by ddrescuelog. Depending on the requested operation it
 may be the sector size of the input device, the block size of the
 rescued file system, etc. Defaults to 512.
 
-     <br><dt>`<samp><span class="samp">-c[</span><var>type1</var><var>type2</var><span class="samp">]</span></samp>'<dt>`<samp><span class="samp">--create-logfile[=</span><var>type1</var><var>type2</var><span class="samp">]</span></samp>'<dd>Create a logfile from a list of block numbers read from standard input. 
+     <br><dt>'<samp><span class="samp">-B</span></samp>'<dt>'<samp><span class="samp">--binary-prefixes</span></samp>'<dd>Show units with binary prefixes (powers of 1024).<br>
+SI prefixes (powers of 1000) are used by default. (See table above,
+<a href="#Invoking-ddrescue">Invoking ddrescue</a>).
+
+     <br><dt>'<samp><span class="samp">-c[</span><var>type1</var><var>type2</var><span class="samp">]</span></samp>'<dt>'<samp><span class="samp">--create-logfile[=</span><var>type1</var><var>type2</var><span class="samp">]</span></samp>'<dd>Create a logfile from a list of block numbers read from standard input. 
 Only blocks included in the rescue domain will be added to <var>logfile</var>.
 
      <p><var>type1</var> and <var>type2</var> are block status characters as defined in
 the chapter Logfile structure (see <a href="#Logfile-structure">Logfile structure</a>). <var>type1</var>
 sets the type for blocks included in the list, while <var>type2</var> sets
 the type for the rest of the logfile. If not specified, <var>type1</var>
-defaults to `<samp><span class="samp">+</span></samp>' and <var>type2</var> defaults to `<samp><span class="samp">-</span></samp>'.
+defaults to '<samp><span class="samp">+</span></samp>' and <var>type2</var> defaults to '<samp><span class="samp">-</span></samp>'.
 
-     <br><dt>`<samp><span class="samp">-d</span></samp>'<dt>`<samp><span class="samp">--delete-if-done</span></samp>'<dd>Delete the given <var>logfile</var> if all the blocks in the rescue domain
+     <br><dt>'<samp><span class="samp">-C[</span><var>type</var><span class="samp">]</span></samp>'<dt>'<samp><span class="samp">--complete-logfile[=</span><var>type</var><span class="samp">]</span></samp>'<dd>Complete a synthetic (user fabricated) <var>logfile</var> by filling the gaps
+with blocks of type <var>type</var>, and write the completed logfile to
+standard output. <var>type</var> is one of the block status characters
+defined in the chapter Logfile structure (see <a href="#Logfile-structure">Logfile structure</a>). If
+<var>type</var> is not specified, the gaps are filled with non-tried blocks. 
+All gaps in the logfile are filled. Domain options are ignored.
+
+     <br><dt>'<samp><span class="samp">-d</span></samp>'<dt>'<samp><span class="samp">--delete-if-done</span></samp>'<dd>Delete the given <var>logfile</var> if all the blocks in the rescue domain
 have been successfuly recovered. The exit status is 0 if <var>logfile</var>
 could be deleted, 1 otherwise.
 
-     <br><dt>`<samp><span class="samp">-D</span></samp>'<dt>`<samp><span class="samp">--done-status</span></samp>'<dd>Test if all the blocks in the rescue domain have been successfuly
+     <br><dt>'<samp><span class="samp">-D</span></samp>'<dt>'<samp><span class="samp">--done-status</span></samp>'<dd>Test if all the blocks in the rescue domain have been successfuly
 recovered. The exit status is 0 if all tested blocks are finished, 1
 otherwise.
 
-     <br><dt>`<samp><span class="samp">-f</span></samp>'<dt>`<samp><span class="samp">--force</span></samp>'<dd>Force overwrite of <var>logfile</var>.
+     <br><dt>'<samp><span class="samp">-f</span></samp>'<dt>'<samp><span class="samp">--force</span></samp>'<dd>Force overwrite of <var>logfile</var>.
 
-     <br><dt>`<samp><span class="samp">-i </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--input-position=</span><var>bytes</var></samp>'<dd>Starting position of the rescue domain, in bytes. Defaults to 0. It
+     <br><dt>'<samp><span class="samp">-i </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--input-position=</span><var>bytes</var></samp>'<dd>Starting position of the rescue domain, in bytes. Defaults to 0. It
 refers to a position in the original input file.
 
-     <br><dt>`<samp><span class="samp">-l </span><var>types</var></samp>'<dt>`<samp><span class="samp">--list-blocks=</span><var>types</var></samp>'<dd>Print on standard output the block numbers of the blocks specified as
+     <br><dt>'<samp><span class="samp">-l </span><var>types</var></samp>'<dt>'<samp><span class="samp">--list-blocks=</span><var>types</var></samp>'<dd>Print on standard output the block numbers of the blocks specified as
 any of <var>types</var> in <var>logfile</var> and included in the rescue domain. 
 <var>types</var> contains one or more of the block status characters defined
 in the chapter Logfile structure (see <a href="#Logfile-structure">Logfile structure</a>).
@@ -1103,45 +1151,52 @@ in the chapter Logfile structure (see <a href="#Logfile-structure">Logfile struc
 of the badblocks program, so that it can be used as input for e2fsck or
 other similar filesystem repairing tool.
 
-     <br><dt>`<samp><span class="samp">-m </span><var>file</var></samp>'<dt>`<samp><span class="samp">--domain-logfile=</span><var>file</var></samp>'<dd>Restrict the rescue domain to the blocks marked as finished in the
+     <br><dt>'<samp><span class="samp">-L</span></samp>'<dt>'<samp><span class="samp">--loose-domain</span></samp>'<dd>Accept a incomplete synthetic (user fabricated) domain logfile and fill
+the gaps with non-tried blocks. The blocks in the logfile must be
+strictly ascending and non-overlapping, but they do not need to be
+contiguous. This option allows making quick edits to a logfile without
+all the size calculations involved in making all data blocks contiguous
+again.
+
+     <br><dt>'<samp><span class="samp">-m </span><var>file</var></samp>'<dt>'<samp><span class="samp">--domain-logfile=</span><var>file</var></samp>'<dd>Restrict the rescue domain to the blocks marked as finished in the
 logfile <var>file</var>.
 
-     <br><dt>`<samp><span class="samp">-n</span></samp>'<dt>`<samp><span class="samp">--invert-logfile</span></samp>'<dd>Invert the types of the blocks in <var>logfile</var> which are included in
+     <br><dt>'<samp><span class="samp">-n</span></samp>'<dt>'<samp><span class="samp">--invert-logfile</span></samp>'<dd>Invert the types of the blocks in <var>logfile</var> which are included in
 the rescue domain, and write the resulting logfile to standard output. 
-Finished blocks (`<samp><span class="samp">+</span></samp>') are changed to bad-sector (`<samp><span class="samp">-</span></samp>'), all
-other types are changed to finished. `<samp><span class="samp">--invert-logfile</span></samp>' is
-equivalent to `<samp><span class="samp">--change-types=?*/-+,++++-</span></samp>'
+Finished blocks ('<samp><span class="samp">+</span></samp>') are changed to bad-sector ('<samp><span class="samp">-</span></samp>'), all
+other types are changed to finished. '<samp><span class="samp">--invert-logfile</span></samp>' is
+equivalent to '<samp><span class="samp">--change-types=?*/-+,++++-</span></samp>'
 
-     <br><dt>`<samp><span class="samp">-o </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--output-position=</span><var>bytes</var></samp>'<dd>Starting position in output file, in bytes. Is used by the
-`<samp><span class="samp">--list-blocks</span></samp>' option. Defaults to `<samp><span class="samp">--input-position</span></samp>'.
+     <br><dt>'<samp><span class="samp">-o </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--output-position=</span><var>bytes</var></samp>'<dd>Starting position in output file, in bytes. Is used by the
+'<samp><span class="samp">--list-blocks</span></samp>' option. Defaults to '<samp><span class="samp">--input-position</span></samp>'.
 
-     <br><dt>`<samp><span class="samp">-p </span><var>file</var></samp>'<dt>`<samp><span class="samp">--compare-logfile=</span><var>file</var></samp>'<dd>Compare the types of the blocks included in the rescue domain. The exit
+     <br><dt>'<samp><span class="samp">-p </span><var>file</var></samp>'<dt>'<samp><span class="samp">--compare-logfile=</span><var>file</var></samp>'<dd>Compare the types of the blocks included in the rescue domain. The exit
 status is 0 if all tested blocks are the same in both files, 1
 otherwise.
 
-     <br><dt>`<samp><span class="samp">-q</span></samp>'<dt>`<samp><span class="samp">--quiet</span></samp>'<dd>Quiet operation. Suppress all messages.
+     <br><dt>'<samp><span class="samp">-q</span></samp>'<dt>'<samp><span class="samp">--quiet</span></samp>'<dd>Quiet operation. Suppress all messages.
 
-     <br><dt>`<samp><span class="samp">-s </span><var>bytes</var></samp>'<dt>`<samp><span class="samp">--size=</span><var>bytes</var></samp>'<dd>Maximum size of the rescue domain, in bytes. It refers to a size in the
+     <br><dt>'<samp><span class="samp">-s </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--size=</span><var>bytes</var></samp>'<dd>Maximum size of the rescue domain, in bytes. It refers to a size in the
 original input file.
 
-     <br><dt>`<samp><span class="samp">-t</span></samp>'<dt>`<samp><span class="samp">--show-status</span></samp>'<dd>Print a summary of <var>logfile</var> contents on the standard output. The
+     <br><dt>'<samp><span class="samp">-t</span></samp>'<dt>'<samp><span class="samp">--show-status</span></samp>'<dd>Print a summary of <var>logfile</var> contents on the standard output. The
 summary can be restricted to one or several parts of <var>logfile</var> if
 the domain setting options are used.
 
-     <br><dt>`<samp><span class="samp">-v</span></samp>'<dt>`<samp><span class="samp">--verbose</span></samp>'<dd>Verbose mode. Further -v's (up to 4) increase the verbosity level.
+     <br><dt>'<samp><span class="samp">-v</span></samp>'<dt>'<samp><span class="samp">--verbose</span></samp>'<dd>Verbose mode. Further -v's (up to 4) increase the verbosity level.
 
-     <br><dt>`<samp><span class="samp">-x </span><var>file</var></samp>'<dt>`<samp><span class="samp">--xor-logfile=</span><var>file</var></samp>'<dd>Perform a logical XOR (exclusive OR) operation between the finished
+     <br><dt>'<samp><span class="samp">-x </span><var>file</var></samp>'<dt>'<samp><span class="samp">--xor-logfile=</span><var>file</var></samp>'<dd>Perform a logical XOR (exclusive OR) operation between the finished
 blocks in <var>file</var> and those in <var>logfile</var>, and write the resulting
 logfile to standard output. In other words, in the resulting logfile a
 block is only shown as finished if it was finished in either of the two
 input logfiles but not in both.
 
-     <br><dt>`<samp><span class="samp">-y </span><var>file</var></samp>'<dt>`<samp><span class="samp">--and-logfile=</span><var>file</var></samp>'<dd>Perform a logical AND operation between the finished blocks in
+     <br><dt>'<samp><span class="samp">-y </span><var>file</var></samp>'<dt>'<samp><span class="samp">--and-logfile=</span><var>file</var></samp>'<dd>Perform a logical AND operation between the finished blocks in
 <var>file</var> and those in <var>logfile</var>, and write the resulting logfile
 to standard output. In other words, in the resulting logfile a block is
 only shown as finished if it was finished in both input logfiles.
 
-     <br><dt>`<samp><span class="samp">-z </span><var>file</var></samp>'<dt>`<samp><span class="samp">--or-logfile=</span><var>file</var></samp>'<dd>Perform a logical OR operation between the finished blocks in <var>file</var>
+     <br><dt>'<samp><span class="samp">-z </span><var>file</var></samp>'<dt>'<samp><span class="samp">--or-logfile=</span><var>file</var></samp>'<dd>Perform a logical OR operation between the finished blocks in <var>file</var>
 and those in <var>logfile</var>, and write the resulting logfile to standard
 output. In other words, in the resulting logfile a block is shown as
 finished if it was finished in either of the two input logfiles.
@@ -1154,8 +1209,8 @@ invalid input file, 3 for an internal consistency error (eg, bug) which
 caused ddrescuelog to panic.
 
 <div class="node">
-<p><hr>
 <a name="Problems"></a>
+<p><hr>
 Next:&nbsp;<a rel="next" accesskey="n" href="#Concept-index">Concept index</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Invoking-ddrescuelog">Invoking ddrescuelog</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
@@ -1172,11 +1227,11 @@ for all eternity, if not longer.
 
    <p>If you find a bug in GNU ddrescue, please send electronic mail to
 <a href="mailto:bug-ddrescue@gnu.org">bug-ddrescue@gnu.org</a>. Include the version number, which you can
-find by running `<samp><span class="samp">ddrescue&nbsp;--version</span></samp>'<!-- /@w -->.
+find by running '<samp><span class="samp">ddrescue&nbsp;--version</span></samp>'<!-- /@w -->.
 
 <div class="node">
-<p><hr>
 <a name="Concept-index"></a>
+<p><hr>
 Previous:&nbsp;<a rel="previous" accesskey="p" href="#Problems">Problems</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
 
@@ -1205,3 +1260,10 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#Top">Top</a>
 <li><a href="#index-version-8">version</a>: <a href="#Invoking-ddrescue">Invoking ddrescue</a></li>
 </ul></body></html>
 
+<!--
+
+Local Variables:
+coding: iso-8859-15
+End:
+
+-->
