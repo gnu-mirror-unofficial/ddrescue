@@ -30,7 +30,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
 
 <h2 class="unnumbered">GNU ddrescue Manual</h2>
 
-<p>This manual is for GNU ddrescue (version 1.18-pre10, 30 March 2014).
+<p>This manual is for GNU ddrescue (version 1.18-pre10, 28 April 2014).
 
 <ul class="menu">
 <li><a accesskey="1" href="#Introduction">Introduction</a>:           Purpose and features of GNU ddrescue
@@ -986,7 +986,9 @@ string not present in any file, for example "DEADBEEF".
    <p>3) Mount the copied drive (or the image file, via loopback device).
 
    <p>4) Grep for the fill string in all the files. Those files containing the
-string reside (at least partially) in damaged disc areas.
+string reside (at least partially) in damaged disc areas. Note that if
+all the damaged areas are in unused space, grep will not find the string
+in any file, which means that no files are damaged.
 
    <p>5) Unmount the copied drive or image file.
 
@@ -1000,7 +1002,7 @@ file with zeros to restore the disc image.
      ddrescue --fill-mode=- tmpfile cdimage logfile
      rm tmpfile
      mount -t iso9660 -o loop,ro cdimage /mnt/cdimage
-     find /mnt/cdimage -type f -exec grep "DEADBEEF" '{}' ';'
+     find /mnt/cdimage -type f -exec grep -l "DEADBEEF" '{}' ';'
      umount /mnt/cdimage
      ddrescue --fill-mode=- /dev/zero cdimage logfile
 </pre>
