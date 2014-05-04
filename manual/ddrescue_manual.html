@@ -30,7 +30,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
 
 <h2 class="unnumbered">GNU ddrescue Manual</h2>
 
-<p>This manual is for GNU ddrescue (version 1.18-pre10, 28 April 2014).
+<p>This manual is for GNU ddrescue (version 1.18-rc1, 4 May 2014).
 
 <ul class="menu">
 <li><a accesskey="1" href="#Introduction">Introduction</a>:           Purpose and features of GNU ddrescue
@@ -280,22 +280,26 @@ center of the largest non-split block, until a bad sector is found.
 Then, if the bad sector found is not the first one tried, read backwards
 one sector at a time from the center of the same block, until a bad
 sector is found. If the logfile is larger than '<samp><span class="samp">--logfile-size</span></samp>',
-read the smallest non-split blocks until the number of entries in the
-logfile drops below '<samp><span class="samp">--logfile-size</span></samp>'. Repeat until all remaining
-non-split blocks have less than 5 sectors. Then read the remaining
-non-split blocks sequentially.
+read sequentially the largest non-split blocks until the number of
+entries in the logfile drops below '<samp><span class="samp">--logfile-size</span></samp>'. Repeat until
+all remaining non-split blocks have less than 7 sectors. Then read the
+remaining non-split blocks sequentially.
 
    <p>5) (Fourth phase; Retrying) Optionally try to read again the bad sectors
 until the specified number of retry passes is reached. Every bad sector
-is tried only once in each pass.
+is tried only once in each pass. Ddrescue can't know if a bad sector is
+unrecoverable or if it will be eventually read after some retries.
 
    <p>6) Optionally write a logfile for later use.
 
    <pre class="sp">
 
 </pre>
+The total error size ('<samp><span class="samp">errsize</span></samp>') is sum of the sizes of all the
+non-trimmed, non-split and bad-sector blocks. It increases during the
+copying phase and may decrease during trimming, splitting and retrying. 
 Note that as ddrescue splits the failed blocks, making them smaller, the
-total error size may diminish while the number of errors increases.
+total error size may decrease while the number of errors increases.
 
    <p>The logfile is periodically saved to disc, as well as when ddrescue
 finishes or is interrupted. So in case of a crash you can resume the
@@ -439,15 +443,22 @@ can't be known in advance and because the size derived from the
 <var>logfile</var> may be incomplete, for example after doing a partial
 rescue.
 
-     <br><dt>'<samp><span class="samp">-K </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--skip-size=</span><var>bytes</var></samp>'<dd>Set the initial size to skip on the first read error or slow read during
-the copying phase. The value given will be rounded to the next multiple
-of sector size. The skip size will be doubled for each read error or
-slow read until it reaches 1% of the size of <var>infile</var> or 1 GiB
-(whichever is smaller), and reset when good data is found. If ddrescue
-is having difficulties skipping away from a large area with scattered
-errors, or if the device has large error areas at regular intervals, you
-can increase the initial skip size with this option. Valid values range
-from 64 KiB to 1 GiB. Defaults to 64 KiB.
+     <br><dt>'<samp><span class="samp">-K </span><var>initial</var><span class="samp">[,</span><var>max</var><span class="samp">]</span></samp>'<dt>'<samp><span class="samp">-K ,</span><var>max</var></samp>'<dt>'<samp><span class="samp">--skip-size=</span><var>initial</var><span class="samp">[,</span><var>max</var><span class="samp">]</span></samp>'<dt>'<samp><span class="samp">--skip-size=,</span><var>max</var></samp>'<dd>Set the initial size in bytes to skip (on the first read error or slow
+read) and/or the maximum size to skip, both during the copying phase. 
+The values given will be rounded to the next multiple of sector size. 
+The skip size will be doubled for each read error or slow read until it
+reaches <var>max</var> or, if <var>max</var> is omitted, 1% of the size of
+<var>infile</var> or 1 GiB (whichever is smaller), and will be reset when
+good data is found. Valid values range from 64 KiB to 1 GiB. Defaults to
+64 KiB. An <var>initial</var> value of 0 disables skipping entirely.
+
+     <p>If ddrescue is having difficulties skipping away from a large area with
+scattered errors, or if the device has large error areas at regular
+intervals, you can increase the initial skip size with this option. 
+Inversely, if ddrescue is skipping too much, leaving large non-tried
+areas behind each error (which will be read later in the usually slower
+backwards direction), you can reduce the maximum skip size, or disable
+skipping.
 
      <p>'<samp><span class="samp">--skip-size</span></samp>' is independent from '<samp><span class="samp">--cluster-size</span></samp>'. The size
 to skip is calculated from the end of the block that just failed.
@@ -486,11 +497,11 @@ are set to 0.
 
      <br><dt>'<samp><span class="samp">-O</span></samp>'<dt>'<samp><span class="samp">--reopen-on-error</span></samp>'<dd>Close <var>infile</var> and then reopen it after every read error and, if
 '<samp><span class="samp">--min-read-rate</span></samp>' is set, after every slow read encountered both
-during the copying phase (i.e., every time ddrescue skips ahead). Use
-this option if you notice a permanent drop in transfer rate after
-finding read errors or slow areas. But be warned that most probably the
-slowing-down is intentionally caused by the kernel in an attempt to
-increase the probability of reading data from the device.
+during the copying phase. Use this option if you notice a permanent drop
+in transfer rate after finding read errors or slow areas. But be warned
+that most probably the slowing-down is intentionally caused by the
+kernel in an attempt to increase the probability of reading data from
+the device.
 
      <br><dt>'<samp><span class="samp">-p</span></samp>'<dt>'<samp><span class="samp">--preallocate</span></samp>'<dd>Preallocate space on disc for <var>outfile</var>. Only space for regular
 files can be preallocated. If preallocation succeeds, rescue will not
@@ -613,13 +624,12 @@ The logfile is a text file easy to read and edit. It is formed by three
 parts, the heading comments, the status line, and the list of data
 blocks. Any line beginning with '<samp><span class="samp">#</span></samp>' is a comment line.
 
-   <p>NOTE: Logfiles generated by a version of ddrescue prior to 1.6 lack the
-status line. If you want to use an old logfile with ddrescue 1.6 or
-later, you will have to insert a line like '<samp><span class="samp">0 +</span></samp>' at the beginning
-of the logfile.
-
-   <p>The heading comments contain the version of ddrescue and the command
-line used to create the logfile. They are intended as information for
+   <p>The heading comments contain the version of ddrescue or ddrescuelog that
+created the logfile, the command line used, and the time when the
+program started. If the logfile was created by ddrescue it will also
+contain the current time when the logfile was saved and a copy of the
+status message from the screen describing the operation being performed
+(copying, trimming, finished, etc). They are intended as information for
 the user.
 
    <p>The first non-comment line is the status line. It contains a
@@ -657,8 +667,11 @@ is one of these:
 
 <p class="noindent">And here is an example logfile:
 
-<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.18-pre10<br>
-# Command line: ddrescue /dev/fd0 fdimage logfile<br>
+<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.18-rc1<br>
+# Command line: ddrescue -d -c18 /dev/fd0 fdimage logfile<br>
+# Start time:   2014-05-03 09:37:44<br>
+# Current time: 2014-05-03 09:38:19<br>
+# Copying non-tried blocks... Pass 1 (forwards)<br>
 # current_pos  current_status<br>
 0x00120000     ?<br>
 #      pos         size   status<br>
@@ -671,6 +684,11 @@ is one of these:
 
    <p>If you edit the file, you may use decimal, hexadecimal or octal values,
 using the same syntax as integer constants in C++.
+
+   <p>NOTE: Logfiles generated by a version of ddrescue prior to 1.6 lack the
+status line. If you want to use an old logfile with ddrescue 1.6 or
+later, you will have to insert a line like '<samp><span class="samp">0 +</span></samp>' at the beginning
+of the logfile.
 
 <div class="node">
 <a name="Examples"></a>
@@ -1074,6 +1092,9 @@ contents, converts logfiles to/from other formats, compares logfiles,
 tests rescue status, and can delete a logfile if the rescue is done. 
 Ddrescuelog operations can be restricted to one or several parts of the
 logfile if the domain setting options are used.
+
+   <p>When performing logic operations (AND, OR, XOR) on logfiles of different
+extension, only the blocks present in both files are processed.
 
    <p>Here are some examples of how to use ddrescuelog, alone or in
 combination with other tools.
