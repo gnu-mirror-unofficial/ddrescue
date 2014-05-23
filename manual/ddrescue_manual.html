@@ -30,7 +30,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
 
 <h2 class="unnumbered">GNU ddrescue Manual</h2>
 
-<p>This manual is for GNU ddrescue (version 1.18-rc1, 4 May 2014).
+<p>This manual is for GNU ddrescue (version 1.18-rc2, 23 May 2014).
 
 <ul class="menu">
 <li><a accesskey="1" href="#Introduction">Introduction</a>:           Purpose and features of GNU ddrescue
@@ -443,14 +443,15 @@ can't be known in advance and because the size derived from the
 <var>logfile</var> may be incomplete, for example after doing a partial
 rescue.
 
-     <br><dt>'<samp><span class="samp">-K </span><var>initial</var><span class="samp">[,</span><var>max</var><span class="samp">]</span></samp>'<dt>'<samp><span class="samp">-K ,</span><var>max</var></samp>'<dt>'<samp><span class="samp">--skip-size=</span><var>initial</var><span class="samp">[,</span><var>max</var><span class="samp">]</span></samp>'<dt>'<samp><span class="samp">--skip-size=,</span><var>max</var></samp>'<dd>Set the initial size in bytes to skip (on the first read error or slow
-read) and/or the maximum size to skip, both during the copying phase. 
-The values given will be rounded to the next multiple of sector size. 
-The skip size will be doubled for each read error or slow read until it
-reaches <var>max</var> or, if <var>max</var> is omitted, 1% of the size of
-<var>infile</var> or 1 GiB (whichever is smaller), and will be reset when
-good data is found. Valid values range from 64 KiB to 1 GiB. Defaults to
-64 KiB. An <var>initial</var> value of 0 disables skipping entirely.
+     <br><dt>'<samp><span class="samp">-K </span><var>initial</var><span class="samp">[,</span><var>max</var><span class="samp">]</span></samp>'<dt>'<samp><span class="samp">-K ,</span><var>max</var></samp>'<dt>'<samp><span class="samp">--skip-size=</span><var>initial</var><span class="samp">[,</span><var>max</var><span class="samp">]</span></samp>'<dt>'<samp><span class="samp">--skip-size=,</span><var>max</var></samp>'<dd>Set limits to skip size during the copying phase. <var>initial</var> is the
+size to skip on the first read error or slow read, in bytes. <var>max</var>
+is the maximum size to skip. The values given will be rounded to the
+next multiple of sector size. The skip size will be doubled for each
+read error or slow read until it reaches <var>max</var> or, if <var>max</var> is
+omitted, 1% of the size of <var>infile</var> or 1 GiB (whichever is smaller),
+and will be reset to <var>initial</var> when good data is found. Valid values
+range from 64 KiB to 1 GiB. <var>initial</var> defaults to 64 KiB. An
+<var>initial</var> value of 0 disables skipping entirely.
 
      <p>If ddrescue is having difficulties skipping away from a large area with
 scattered errors, or if the device has large error areas at regular
@@ -667,21 +668,20 @@ is one of these:
 
 <p class="noindent">And here is an example logfile:
 
-<p class="noindent"># Rescue Logfile. Created by GNU ddrescue version 1.18-rc1<br>
-# Command line: ddrescue -d -c18 /dev/fd0 fdimage logfile<br>
-# Start time:   2014-05-03 09:37:44<br>
-# Current time: 2014-05-03 09:38:19<br>
-# Copying non-tried blocks... Pass 1 (forwards)<br>
-# current_pos  current_status<br>
-0x00120000     ?<br>
-#      pos         size   status<br>
-   <p><table summary=""><tr align="left"><td valign="top">0x00000000 </td><td valign="top">0x00117000 </td><td valign="top">+
-<br></td></tr><tr align="left"><td valign="top">0x00117000 </td><td valign="top">0x00000200 </td><td valign="top">-
-<br></td></tr><tr align="left"><td valign="top">0x00117200 </td><td valign="top">0x00001000 </td><td valign="top">/
-<br></td></tr><tr align="left"><td valign="top">0x00118200 </td><td valign="top">0x00007E00 </td><td valign="top">*
-<br></td></tr><tr align="left"><td valign="top">0x00120000 </td><td valign="top">0x00048000 </td><td valign="top">?
-   <br></td></tr></table>
-
+<pre class="example">     # Rescue Logfile. Created by GNU ddrescue version 1.18-rc2
+     # Command line: ddrescue -d -c18 /dev/fd0 fdimage logfile
+     # Start time:   2014-05-03 09:37:44
+     # Current time: 2014-05-03 09:38:19
+     # Copying non-tried blocks... Pass 1 (forwards)
+     # current_pos  current_status
+     0x00120000     ?
+     #      pos        size  status
+     0x00000000  0x00117000  +
+     0x00117000  0x00000200  -
+     0x00117200  0x00001000  /
+     0x00118200  0x00007E00  *
+     0x00120000  0x00048000  ?
+</pre>
    <p>If you edit the file, you may use decimal, hexadecimal or octal values,
 using the same syntax as integer constants in C++.
 
