@@ -30,7 +30,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
 
 <h2 class="unnumbered">GNU ddrescue Manual</h2>
 
-<p>This manual is for GNU ddrescue (version 1.18-rc3, 24 May 2014).
+<p>This manual is for GNU ddrescue (version 1.18, 7 June 2014).
 
 <ul class="menu">
 <li><a accesskey="1" href="#Introduction">Introduction</a>:           Purpose and features of GNU ddrescue
@@ -559,22 +559,23 @@ If the size of <var>outfile</var> is already equal or longer than <var>bytes</va
 then this option does nothing. Use this option to guarantee a minimum
 size for <var>outfile</var>. Only regular files can be extended.
 
-     <br><dt>'<samp><span class="samp">-1 </span><var>file</var></samp>'<dt>'<samp><span class="samp">--log-rates=</span><var>file</var></samp>'<dd>Log rates and error sizes every second in <var>file</var>. Every time the
-screen is updated with new details, some of those details (time, input
-position, current and average rates, number of errors and error size)
-are written to <var>file</var> in a format usable by plotting utilities like
-gnuplot. This allows a posterior analysis of the drive to see if it has
-any weak zones (areas where the transfer rate drops well below the
-sustained average).
+     <br><dt>'<samp><span class="samp">-1 </span><var>file</var></samp>'<dt>'<samp><span class="samp">--log-rates=</span><var>file</var></samp>'<dd>Log rates and error sizes every second in <var>file</var>. If <var>file</var>
+already exists, it will be overwritten. Every time the screen is updated
+with new details, some of those details (time, input position, current
+and average rates, number of errors and error size) are written to
+<var>file</var> in a format usable by plotting utilities like gnuplot. This
+allows a posterior analysis of the drive to see if it has any weak zones
+(areas where the transfer rate drops well below the sustained average).
 
-     <br><dt>'<samp><span class="samp">-2 </span><var>file</var></samp>'<dt>'<samp><span class="samp">--log-reads=</span><var>file</var></samp>'<dd>Log all read operations in <var>file</var>. Every read attempt and its result
-(position, size, copied size and error size) is written to <var>file</var>. 
-(The position written is always the beginning of the block tried, even
-if reading backwards). A line is also written at the beginning of each
-phase (copying, trimming, splitting and retrying). Finally, a line with
-a time mark is written every second (unless the read takes more time). 
-Use this option with caution because <var>file</var> may become very large
-very quickly. Use lzip to compress <var>file</var> if you need to store or
+     <br><dt>'<samp><span class="samp">-2 </span><var>file</var></samp>'<dt>'<samp><span class="samp">--log-reads=</span><var>file</var></samp>'<dd>Log all read operations in <var>file</var>. If <var>file</var> already exists, it
+will be overwritten. Every read attempt and its result (position, size,
+copied size and error size) is written to <var>file</var>. (The position
+written is always the beginning of the block tried, even if reading
+backwards). A line is also written at the beginning of each phase
+(copying, trimming, splitting and retrying). Finally, a line with a time
+mark is written every second (unless the read takes more time). Use this
+option with caution because <var>file</var> may become very large very
+quickly. Use lzip to compress <var>file</var> if you need to store or
 transmit it.
 
    </dl>
@@ -668,7 +669,7 @@ is one of these:
 
 <p class="noindent">And here is an example logfile:
 
-<pre class="example">     # Rescue Logfile. Created by GNU ddrescue version 1.18-rc3
+<pre class="example">     # Rescue Logfile. Created by GNU ddrescue version 1.18
      # Command line: ddrescue -d -c18 /dev/fd0 fdimage logfile
      # Start time:   2014-05-03 09:37:44
      # Current time: 2014-05-03 09:38:19
