@@ -30,7 +30,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
 
 <h2 class="unnumbered">GNU ddrescue Manual</h2>
 
-<p>This manual is for GNU ddrescue (version 1.18, 7 June 2014).
+<p>This manual is for GNU ddrescue (version 1.19, 3 October 2014).
 
 <ul class="menu">
 <li><a accesskey="1" href="#Introduction">Introduction</a>:           Purpose and features of GNU ddrescue
@@ -52,8 +52,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
    <pre class="sp">
 
 </pre>
-Copyright &copy; 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011,
-2012, 2013, 2014 Antonio Diaz Diaz.
+Copyright &copy; 2004-2014 Antonio Diaz Diaz.
 
    <p>This manual is free documentation: you have unlimited permission
 to copy, distribute and modify it.
@@ -91,8 +90,9 @@ gaps without wiping out the data already rescued.
 a file, cdrom, etc, and run ddrescue on all of them, one at a time, with
 the same output file, you will probably obtain a complete and error-free
 file. This is so because the probability of having the same area damaged
-in all copies is low. Using the logfile, only the needed blocks are read
-from the second and successive copies.
+in all copies is low (if the errors are randomly located). Using the
+logfile, only the needed blocks are read from the second and successive
+copies.
 
    <p>Ddrescue recommends lzip for compression of backups because the lzip
 format is designed for long-term data archiving and provides data
@@ -260,35 +260,27 @@ pass until all the rescue domain is tried. The third pass is a sweeping
 pass, with skipping disabled. (The purpose is to delimit large errors
 fast, keep the logfile small, and produce good starting points for
 trimming). Only non-tried areas are read in large blocks. Trimming,
-splitting and retrying are done sector by sector. Each sector is tried
-at most two times; the first in this step (usually as part of a large
-block read, but sometimes as a single sector read), the second in one of
-the steps below as a single sector read.
+scraping and retrying are done sector by sector. Each sector is tried at
+most two times; the first in this step as part of a large block read,
+the second in one of the steps below as a single sector read.
 
-   <p>3) (Second phase; Trimming) Read forwards one sector at a time from the
-leading edge of the smallest non-trimmed block, until a bad sector is
-found. Then read backwards one sector at a time from the trailing edge
-of the same block, until a bad sector is found. For each non-trimmed
-block, mark the bad sectors found as bad-sector and mark the rest of
-that block as non-split without trying to read it. Repeat until there
-are no more non-trimmed blocks. (Large non-trimmed blocks are produced
-by concatenation of smaller ones, and its fraction of good data at the
-edges is therefore smaller).
+   <p>3) (Second phase; Trimming) Trimming is done in one pass. For each
+non-trimmed block, read forwards one sector at a time from the leading
+edge of the block until a bad sector is found. Then read backwards one
+sector at a time from the trailing edge of the block until a bad sector
+is found. Then mark the bad sectors found (if any) as bad-sector, and
+mark the rest of the block as non-scraped without trying to read it.
 
-   <p>4) (Third phase; Splitting) Read forwards one sector at a time from the
-center of the largest non-split block, until a bad sector is found. 
-Then, if the bad sector found is not the first one tried, read backwards
-one sector at a time from the center of the same block, until a bad
-sector is found. If the logfile is larger than '<samp><span class="samp">--logfile-size</span></samp>',
-read sequentially the largest non-split blocks until the number of
-entries in the logfile drops below '<samp><span class="samp">--logfile-size</span></samp>'. Repeat until
-all remaining non-split blocks have less than 7 sectors. Then read the
-remaining non-split blocks sequentially.
+   <p>4) (Third phase; Scraping) Scrape together the data not recovered by the
+copying or trimming phases. Scraping is done in one pass. Each
+non-scraped block is read forwards, one sector at a time. Any bad
+sectors found are marked as bad-sector.
 
    <p>5) (Fourth phase; Retrying) Optionally try to read again the bad sectors
-until the specified number of retry passes is reached. Every bad sector
-is tried only once in each pass. Ddrescue can't know if a bad sector is
-unrecoverable or if it will be eventually read after some retries.
+until the specified number of retry passes is reached. The direction is
+reversed after each pass. Every bad sector is tried only once in each
+pass. Ddrescue can't know if a bad sector is unrecoverable or if it will
+be eventually read after some retries.
 
    <p>6) Optionally write a logfile for later use.
 
@@ -296,10 +288,11 @@ unrecoverable or if it will be eventually read after some retries.
 
 </pre>
 The total error size ('<samp><span class="samp">errsize</span></samp>') is sum of the sizes of all the
-non-trimmed, non-split and bad-sector blocks. It increases during the
-copying phase and may decrease during trimming, splitting and retrying. 
-Note that as ddrescue splits the failed blocks, making them smaller, the
-total error size may decrease while the number of errors increases.
+non-trimmed, non-scraped and bad-sector blocks. It increases during the
+copying phase and may decrease during trimming, scraping and retrying. 
+Note that as ddrescue scrapes or retries the failed blocks, the good
+data found may divide them into smaller blocks, decreasing the total
+error size but increasing the number of errors.
 
    <p>The logfile is periodically saved to disc, as well as when ddrescue
 finishes or is interrupted. So in case of a crash you can resume the
@@ -357,9 +350,9 @@ blocks left.
 each block as (average_rate&nbsp;/&nbsp;10)<!-- /@w -->. Values above device capabilities
 are ignored.
 
-     <br><dt>'<samp><span class="samp">-A</span></samp>'<dt>'<samp><span class="samp">--try-again</span></samp>'<dd>Mark all non-split and non-trimmed blocks inside the rescue domain as
+     <br><dt>'<samp><span class="samp">-A</span></samp>'<dt>'<samp><span class="samp">--try-again</span></samp>'<dd>Mark all non-trimmed and non-scraped blocks inside the rescue domain as
 non-tried before beginning the rescue. Try this if the drive stops
-responding and ddrescue immediately starts splitting failed blocks when
+responding and ddrescue immediately starts scraping failed blocks when
 restarted. If '<samp><span class="samp">--retrim</span></samp>' is also specified, mark all failed blocks
 inside the rescue domain as non-tried.
 
@@ -406,7 +399,9 @@ if the total error size (errsize) does not change because the areas
 being tried are already marked as errors.
 
      <br><dt>'<samp><span class="samp">-f</span></samp>'<dt>'<samp><span class="samp">--force</span></samp>'<dd>Force overwrite of <var>outfile</var>. Needed when <var>outfile</var> is not a
-regular file, but a device or partition.
+regular file, but a device or partition. This option is just a safeguard
+to prevent the inadvertent destruction of partitions, and is ignored for
+regular files.
 
      <br><dt>'<samp><span class="samp">-F </span><var>types</var></samp>'<dt>'<samp><span class="samp">--fill-mode=</span><var>types</var></samp>'<dd>Fill the blocks in <var>outfile</var> specified as any of <var>types</var> in
 <var>logfile</var>, with data read from <var>infile</var>. <var>types</var> contains
@@ -432,7 +427,7 @@ presence of read errors.
      <br><dt>'<samp><span class="samp">-i </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--input-position=</span><var>bytes</var></samp>'<dd>Starting position of the rescue domain in <var>infile</var>, in bytes. 
 Defaults to 0. This is not the point from which ddrescue starts copying. 
 (For example, if you pass the '<samp><span class="samp">--reverse</span></samp>' option to ddrescue, it
-starts reading from the end of the rescue domain). In fill mode it
+starts copying from the end of the rescue domain). In fill mode it
 refers to a position in the <var>infile</var> of the original rescue run. See
 the chapter Fill mode (see <a href="#Fill-mode">Fill mode</a>) for details.
 
@@ -443,11 +438,12 @@ can't be known in advance and because the size derived from the
 <var>logfile</var> may be incomplete, for example after doing a partial
 rescue.
 
-     <br><dt>'<samp><span class="samp">-K </span><var>initial</var><span class="samp">[,</span><var>max</var><span class="samp">]</span></samp>'<dt>'<samp><span class="samp">-K ,</span><var>max</var></samp>'<dt>'<samp><span class="samp">--skip-size=</span><var>initial</var><span class="samp">[,</span><var>max</var><span class="samp">]</span></samp>'<dt>'<samp><span class="samp">--skip-size=,</span><var>max</var></samp>'<dd>Set limits to skip size during the copying phase. <var>initial</var> is the
-size to skip on the first read error or slow read, in bytes. <var>max</var>
-is the maximum size to skip. The values given will be rounded to the
-next multiple of sector size. The skip size will be doubled for each
-read error or slow read until it reaches <var>max</var> or, if <var>max</var> is
+     <br><dt>'<samp><span class="samp">-K [</span><var>initial</var><span class="samp">][,</span><var>max</var><span class="samp">]</span></samp>'<dt>'<samp><span class="samp">--skip-size=[</span><var>initial</var><span class="samp">][,</span><var>max</var><span class="samp">]</span></samp>'<dd>Set limits to skip size during the copying phase. At least one of
+<var>initial</var> or <var>max</var> must be specified. <var>initial</var> is the size
+to skip on the first read error or slow read, in bytes. <var>max</var> is the
+maximum size to skip. The values given will be rounded to the next
+multiple of sector size. The skip size will be doubled for each read
+error or slow read until it reaches <var>max</var> or, if <var>max</var> is
 omitted, 1% of the size of <var>infile</var> or 1 GiB (whichever is smaller),
 and will be reset to <var>initial</var> when good data is found. Valid values
 range from 64 KiB to 1 GiB. <var>initial</var> defaults to 64 KiB. An
@@ -464,17 +460,12 @@ skipping.
      <p>'<samp><span class="samp">--skip-size</span></samp>' is independent from '<samp><span class="samp">--cluster-size</span></samp>'. The size
 to skip is calculated from the end of the block that just failed.
 
-     <br><dt>'<samp><span class="samp">-l </span><var>entries</var></samp>'<dt>'<samp><span class="samp">--logfile-size=</span><var>entries</var></samp>'<dd>During the splitting phase, do not grow logfile beyond this number of
-entries. Logfile may be larger if it was larger at startup or if it
-became larger during the copying or trimming phases. Defaults to 10000. 
-(Each entry is about 26-30 bytes in size).
-
      <br><dt>'<samp><span class="samp">-L</span></samp>'<dt>'<samp><span class="samp">--loose-domain</span></samp>'<dd>Accept an incomplete synthetic (user fabricated) domain logfile or
-test-mode logfile and fill the gaps with non-tried blocks. The blocks in
-the logfile must be strictly ascending and non-overlapping, but they do
-not need to be contiguous. This option allows making quick edits to a
-logfile without all the size calculations involved in making all data
-blocks contiguous again.
+test-mode logfile and fill the gaps in the list of data blocks with
+non-tried blocks. The blocks in the logfile must be strictly ascending
+and non-overlapping, but they do not need to be contiguous. This option
+allows making quick edits to a logfile without all the size calculations
+involved in making all data blocks contiguous again.
 
      <br><dt>'<samp><span class="samp">-m </span><var>file</var></samp>'<dt>'<samp><span class="samp">--domain-logfile=</span><var>file</var></samp>'<dd>Restrict the rescue domain to the blocks marked as finished in the
 logfile <var>file</var>. This is useful for merging partially recovered
@@ -485,7 +476,7 @@ beginning the rescue. The effect is similar to '<samp><span class="samp">--retry
 but the bad sectors are tried in a different order, making perhaps
 possible to rescue some of them.
 
-     <br><dt>'<samp><span class="samp">-n</span></samp>'<dt>'<samp><span class="samp">--no-split</span></samp>'<dd>Skip the splitting phase. Avoids spending a lot of time trying to rescue
+     <br><dt>'<samp><span class="samp">-n</span></samp>'<dt>'<samp><span class="samp">--no-scrape</span></samp>'<dd>Skip the scraping phase. Avoids spending a lot of time trying to rescue
 the most difficult parts of the file.
 
      <br><dt>'<samp><span class="samp">-N</span></samp>'<dt>'<samp><span class="samp">--no-trim</span></samp>'<dd>Skip the trimming phase. Specially useful in the first parts of a
@@ -511,6 +502,9 @@ size to preallocate, you may need to specify it with some combination of
 the '<samp><span class="samp">--input-position</span></samp>', '<samp><span class="samp">--output-position</span></samp>', '<samp><span class="samp">--size</span></samp>',
 and '<samp><span class="samp">--domain-logfile</span></samp>' options.
 
+     <br><dt>'<samp><span class="samp">-P[</span><var>lines</var><span class="samp">]</span></samp>'<dt>'<samp><span class="samp">--data-preview[=</span><var>lines</var><span class="samp">]</span></samp>'<dd>Show <var>lines</var> lines of the latest data read in '<samp><span class="samp">16-byte&nbsp;hex&nbsp;+&nbsp;ASCII</span></samp>'<!-- /@w --> format. Valid values for <var>lines</var> range from 1 to 32. If
+<var>lines</var> is omitted, a default value of 3 is used.
+
      <br><dt>'<samp><span class="samp">-q</span></samp>'<dt>'<samp><span class="samp">--quiet</span></samp>'<dd>Quiet operation. Suppress all messages.
 
      <br><dt>'<samp><span class="samp">-r </span><var>n</var></samp>'<dt>'<samp><span class="samp">--retry-passes=</span><var>n</var></samp>'<dd>Exit after given number of retry passes. Defaults to 0. -1 means
@@ -518,11 +512,11 @@ infinity. Every bad sector is tried only once in each pass. To retry bad
 sectors detected on a previous run, you must specify a non-zero number
 of retry passes.
 
-     <br><dt>'<samp><span class="samp">-R</span></samp>'<dt>'<samp><span class="samp">--reverse</span></samp>'<dd>Reverse the direction of the first pass of copying, all retrying passes,
-and the sequential part of splitting, running them backwards from the
-end of the rescue domain (or from the end of <var>infile</var> if no domain
-options are specified). '<samp><span class="samp">--reverse</span></samp>' does not modify the size of the
-blocks copied during each phase, just the order in which they are tried.
+     <br><dt>'<samp><span class="samp">-R</span></samp>'<dt>'<samp><span class="samp">--reverse</span></samp>'<dd>Reverse the direction of all passes (copying, trimming, scraping and
+retrying). Every pass that is normally run forwards will now be run
+backwards, and vice versa. '<samp><span class="samp">--reverse</span></samp>' does not modify the size of
+the blocks copied during each phase, just the order in which they are
+tried.
 
      <br><dt>'<samp><span class="samp">-s </span><var>bytes</var></samp>'<dt>'<samp><span class="samp">--size=</span><var>bytes</var></samp>'<dd>Maximum size of the rescue domain, in bytes. It limits the amount of
 input data to be copied. If ddrescue can't determine the size of the
@@ -546,6 +540,9 @@ Defaults to infinity. <var>interval</var> is a rational number (like 1.5 or
 '<samp><span class="samp">d</span></samp>', meaning seconds, minutes, hours and days respectively. If no
 unit is specified, it defaults to seconds.
 
+     <br><dt>'<samp><span class="samp">-u</span></samp>'<dt>'<samp><span class="samp">--unidirectional</span></samp>'<dd>Run all passes in the same direction. Forwards by default, or backwards
+if the option '<samp><span class="samp">--reverse</span></samp>' is also given.
+
      <br><dt>'<samp><span class="samp">-v</span></samp>'<dt>'<samp><span class="samp">--verbose</span></samp>'<dd>Verbose mode. Further -v's (up to 4) increase the verbosity level.
 
      <br><dt>'<samp><span class="samp">-w</span></samp>'<dt>'<samp><span class="samp">--ignore-write-errors</span></samp>'<dd>Make fill mode ignore write errors. This is useful to avoid ddrescue
@@ -558,6 +555,17 @@ found in an area, the rest of that area is filled sector by sector.
 If the size of <var>outfile</var> is already equal or longer than <var>bytes</var>
 then this option does nothing. Use this option to guarantee a minimum
 size for <var>outfile</var>. Only regular files can be extended.
+
+     <br><dt>'<samp><span class="samp">-X</span></samp>'<dt>'<samp><span class="samp">--exit-on-error</span></samp>'<dd>Exit after the first read error is encountered during the copying phase. 
+This is similar but different to '<samp><span class="samp">--timeout=0</span></samp>', which waits until
+the screen status is refreshed (at least 1 second). If there is at least
+one successful read per second, '<samp><span class="samp">--timeout=0</span></samp>' does not make
+ddrescue to exit.
+
+     <p>This is also similar but different to '<samp><span class="samp">--max-errors=+0</span></samp>', which
+exits when a new error area is found. If the read errors are adjacent to
+existing error areas, no new error areas are produced (just enlarged),
+and '<samp><span class="samp">--max-errors=+0</span></samp>' does not make ddrescue to exit.
 
      <br><dt>'<samp><span class="samp">-1 </span><var>file</var></samp>'<dt>'<samp><span class="samp">--log-rates=</span><var>file</var></samp>'<dd>Log rates and error sizes every second in <var>file</var>. If <var>file</var>
 already exists, it will be overwritten. Every time the screen is updated
@@ -572,11 +580,26 @@ will be overwritten. Every read attempt and its result (position, size,
 copied size and error size) is written to <var>file</var>. (The position
 written is always the beginning of the block tried, even if reading
 backwards). A line is also written at the beginning of each phase
-(copying, trimming, splitting and retrying). Finally, a line with a time
+(copying, trimming, scraping and retrying). Finally, a line with a time
 mark is written every second (unless the read takes more time). Use this
 option with caution because <var>file</var> may become very large very
 quickly. Use lzip to compress <var>file</var> if you need to store or
 transmit it.
+
+     <br><dt>'<samp><span class="samp">--ask</span></samp>'<dd>Ask for user confirmation before starting the copy. If the first letter
+of the answer is '<samp><span class="samp">y</span></samp>', ddrescue starts copying. Else it exits with
+status 1.<br>
+If they can be obtained, ddrescue shows the model and serial number of
+the input and output devices. Else it shows the size in bytes of the
+corresponding file or device.
+
+     <br><dt>'<samp><span class="samp">--cpass=</span><var>n</var><span class="samp">[,</span><var>n</var><span class="samp">]</span></samp>'<dd>Select what pass(es) to run during the copying phase. Valid values for
+<var>n</var> range from 0 to 3. '<samp><span class="samp">--cpass=0</span></samp>' skips the copying phase
+entirely. To run only the given pass(es), specify also '<samp><span class="samp">--no-trim</span></samp>'
+and '<samp><span class="samp">--no-scrape</span></samp>'.
+
+     <br><dt>'<samp><span class="samp">--pause=</span><var>interval</var></samp>'<dd>Time to wait between passes. Defaults to 0. <var>interval</var> is formatted
+as in the option '<samp><span class="samp">--timeout</span></samp>' above.
 
    </dl>
 
@@ -643,7 +666,7 @@ status character is one of these:
    <p><table summary=""><tr align="left"><td valign="top">Character </td><td valign="top">Meaning
 <br></td></tr><tr align="left"><td valign="top">'?'       </td><td valign="top">copying non-tried blocks
 <br></td></tr><tr align="left"><td valign="top">'*'       </td><td valign="top">trimming non-trimmed blocks
-<br></td></tr><tr align="left"><td valign="top">'/'       </td><td valign="top">splitting non-split blocks
+<br></td></tr><tr align="left"><td valign="top">'/'       </td><td valign="top">scraping non-scraped blocks
 <br></td></tr><tr align="left"><td valign="top">'-'       </td><td valign="top">retrying bad sectors
 <br></td></tr><tr align="left"><td valign="top">'F'       </td><td valign="top">filling specified blocks
 <br></td></tr><tr align="left"><td valign="top">'G'       </td><td valign="top">generating approximate logfile
@@ -662,14 +685,14 @@ is one of these:
    <p><table summary=""><tr align="left"><td valign="top">Character </td><td valign="top">Meaning
 <br></td></tr><tr align="left"><td valign="top">'?'       </td><td valign="top">non-tried block
 <br></td></tr><tr align="left"><td valign="top">'*'       </td><td valign="top">failed block non-trimmed
-<br></td></tr><tr align="left"><td valign="top">'/'       </td><td valign="top">failed block non-split
+<br></td></tr><tr align="left"><td valign="top">'/'       </td><td valign="top">failed block non-scraped
 <br></td></tr><tr align="left"><td valign="top">'-'       </td><td valign="top">failed block bad-sector(s)
 <br></td></tr><tr align="left"><td valign="top">'+'       </td><td valign="top">finished block
    <br></td></tr></table>
 
 <p class="noindent">And here is an example logfile:
 
-<pre class="example">     # Rescue Logfile. Created by GNU ddrescue version 1.18
+<pre class="example">     # Rescue Logfile. Created by GNU ddrescue version 1.19
      # Command line: ddrescue -d -c18 /dev/fd0 fdimage logfile
      # Start time:   2014-05-03 09:37:44
      # Current time: 2014-05-03 09:38:19
@@ -1222,11 +1245,11 @@ of the badblocks program, so that it can be used as input for e2fsck or
 other similar filesystem repairing tool.
 
      <br><dt>'<samp><span class="samp">-L</span></samp>'<dt>'<samp><span class="samp">--loose-domain</span></samp>'<dd>Accept an incomplete synthetic (user fabricated) domain logfile or
-compare-as-domain logfile and fill the gaps with non-tried blocks. The
-blocks in the logfile must be strictly ascending and non-overlapping,
-but they do not need to be contiguous. This option allows making quick
-edits to a logfile without all the size calculations involved in making
-all data blocks contiguous again.
+compare-as-domain logfile and fill the gaps in the list of data blocks
+with non-tried blocks. The blocks in the logfile must be strictly
+ascending and non-overlapping, but they do not need to be contiguous. 
+This option allows making quick edits to a logfile without all the size
+calculations involved in making all data blocks contiguous again.
 
      <br><dt>'<samp><span class="samp">-m </span><var>file</var></samp>'<dt>'<samp><span class="samp">--domain-logfile=</span><var>file</var></samp>'<dd>Restrict the rescue domain to the blocks marked as finished in the
 logfile <var>file</var>.
