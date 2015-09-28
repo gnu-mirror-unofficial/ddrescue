@@ -6,9 +6,6 @@
 <link rev="made" href="mailto:webmasters@www.gnu.org">
 <meta name="keywords" content="ddrescue, data recovery, lzip, GNU, FSF, free software">
 <meta name="description" content="Data recovery tool">
-<style type="text/css">
-img { border: 0; }
-</style>
 </head>
 <body>
 
@@ -29,19 +26,21 @@ GNU ddrescue is a data recovery tool. It copies data from one file or
 block device (hard disc, cdrom, etc) to another, trying to rescue the
 good parts first in case of read errors.
 <p>
-Ddrescuelog is a tool that manipulates ddrescue logfiles, shows logfile
-contents, converts logfiles to/from other formats, compares logfiles,
-tests rescue status, and can delete a logfile if the rescue is done.
+Ddrescuelog is a tool that manipulates ddrescue mapfiles, shows mapfile
+contents, converts mapfiles to/from other formats, compares mapfiles,
+tests rescue status, and can delete a mapfile if the rescue is done.
 Ddrescuelog operations can be restricted to one or several parts of the
-logfile if the domain setting options are used.
+mapfile if the domain setting options are used.
 <p>
 The basic operation of ddrescue is fully automatic. That is, you don't
-have to wait for an error, stop the program, read the log, restart it
-from a new position, etc.
+have to wait for an error, stop the program, restart it from a new
+position, etc.
 <p>
-If you use the logfile feature of ddrescue, the data is rescued very
+If you use the mapfile feature of ddrescue, the data is rescued very
 efficiently, (only the needed blocks are read). Also you can interrupt
-the rescue at any time and resume it later at the same point.
+the rescue at any time and resume it later at the same point. The
+mapfile is an essential part of ddrescue's effectiveness. Use it unless
+you know what you are doing.
 <p>
 Ddrescue does not write zeros to the output when it finds bad sectors in
 the input, and does not truncate the output file if not asked to. So,
@@ -52,12 +51,13 @@ Automatic merging of backups: If you have two or more damaged copies of
 a file, cdrom, etc, and run ddrescue on all of them, one at a time, with
 the same output file, you will probably obtain a complete and error-free
 file. This is so because the probability of having the same area damaged
-in all copies is low. Using the logfile, only the needed blocks are read
-from the second and successive copies.
+in all copies is low (if the errors are randomly located). Using the
+mapfile, only the needed blocks are read from the second and successive
+copies.
 <p>
 Ddrescue recommends <a href="http://www.nongnu.org/lzip/lzip.html">lzip</a>
 for compression of backups because the lzip format is designed for
-long-term data archiving and provides data recovery capabilities which
+long-term archiving and provides data recovery capabilities which
 nicely complement those of ddrescue. (Ddrescue fills unreadable sectors
 with data from other copies, while lziprecover corrects corrupt sectors
 with data from other copies). If the cause of file corruption is damaged
@@ -66,15 +66,15 @@ media, the combination ddrescue +
 is the best option for recovering data from multiple damaged copies.
 <p>
 Recordable CD and DVD media keep their data only for a finite time
-(typically for many years). After that time, data loss develops slowly
+(typically for some years). After that time, data loss develops slowly
 with read errors growing from the outer media region towards the inside.
-Just make two (or more) copies of every important CD/DVD you burn so
+Just make two (or more) copies of every important CD-ROM/DVD you burn so
 that you can later recover them with ddrescue.
 <p>
-The logfile is periodically saved to disc. So in case of a crash you can
+The mapfile is periodically saved to disc. So in case of a crash you can
 resume the rescue with little recopying.
 <p>
-Also, the same logfile can be used for multiple commands that copy
+Also, the same mapfile can be used for multiple commands that copy
 different areas of the file, and for multiple recovery attempts over
 different subsets.
 <p>
@@ -167,8 +167,7 @@ Free Software Foundation, either version 2 of the License, or (at your
 option) any later version.
 <p>
 <a href="http://validator.w3.org/check?uri=referer">
-<img src="http://www.w3.org/Icons/valid-html401"
-     alt="Valid HTML 4.01 Strict" height="31" width="88"></a>
+Valid HTML 4.01 Strict</a>
 </p>
 
 <hr>
@@ -192,7 +191,7 @@ Floor, Boston, MA 02110-1301 USA
 Verbatim copying and distribution of this entire article is
 permitted in any medium, provided this notice is preserved.
 <p>
-Updated: $Date: 2015/04/24 17:14:15 $ $Author: antonio $
+Updated: $Date: 2015/09/28 10:50:15 $ $Author: antonio $
 </p>
 <hr>
 </body>

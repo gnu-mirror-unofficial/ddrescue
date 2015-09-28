@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15">
@@ -7,10 +7,10 @@
 <meta name="keywords" content="ddrescue, data recovery, lzip, GNU, FSF, software libre">
 <meta name="description" content="Herramienta de recuperación de datos">
 </head>
+<body>
 
-<body bgcolor="#ffffff" text="#000000" link="#1f00ff" alink="#ff0000" vlink="#9900dd">
-
-<h3>Ddrescue - Herramienta de recuperación de datos</h3>
+<h1>Ddrescue - Herramienta de recuperación de datos</h1>
+<p>
 <a href="/graphics/agnuhead.html"><img src="/graphics/gnu-head-sm.jpg"
  alt=" [imagen de la cabeza de un ñu (GNU)] " width="129" height="122"></a>
 
@@ -18,26 +18,27 @@
 | <a href="ddrescue_es.html">Español</a>
 | <a href="ddrescue_fr.html">Français</a>
 | <a href="ddrescue_it.html">Italiano</a> ]
+</p>
 
-<h4>Introducción</h4>
-
+<h2>Introducción</h2>
+<p>
 GNU ddrescue es una herramienta de recuperación de datos. Copia los
 datos de un fichero o un dispositivo de bloques (disco duro, cdrom, etc)
 a otro, intentando recuperar primero las partes no dañadas en caso de
 producirse errores de lectura.
 <p>
-Ddrescuelog es una herramienta que manipula logfiles producidos por
-ddrescue, muestra su contenido, convierte logfiles a/de otros formatos,
-compara logfiles, verifica el estado de un rescate, y puede borrar un
-logfile si el rescate está completo. Las operaciones de ddrescuelog se
-pueden restringir a una o varias partes del logfile si se usan las
+Ddrescuelog es una herramienta que manipula mapfiles producidos por
+ddrescue, muestra su contenido, convierte mapfiles a/de otros formatos,
+compara mapfiles, verifica el estado de un rescate, y puede borrar un
+mapfile si el rescate está completo. Las operaciones de ddrescuelog se
+pueden restringir a una o varias partes del mapfile si se usan las
 opciones de delimitación de dominio.
 <p>
 La operación básica de ddrescue es totalmente automática. Es decir, no
 es necesario esperar a que se produzca un error, parar el programa,
-leer las anotaciones, ejecutarlo de nuevo desde otra posición, etc.
+ejecutarlo de nuevo desde otra posición, etc.
 <p>
-Si se usa el fichero de anotaciones (logfile) de ddrescue, los datos son
+Si se usa el fichero de anotaciones (mapfile) de ddrescue, los datos son
 recuperados muy eficientemente, (sólo se leen los bloques necesarios).
 Además se puede interrumpir el rescate en cualquier momento y reanudarlo
 después en el mismo punto.
@@ -52,7 +53,7 @@ dañadas de un mismo fichero, cdrom, etc, y se ejecuta ddrescue en todas
 ellas, una cada vez, sobre el mismo fichero de salida, se obtendrá
 probablemente un fichero completo y libre de errores. Esto es así porque
 la probabilidad de tener la misma área dañada en todas las copias es
-baja. Usando el fichero de anotaciones (logfile), sólo se leen los
+baja. Usando el fichero de anotaciones (mapfile), sólo se leen los
 bloques que se necesiten de la segunda copia y sucesivas.
 <p>
 Ddrescue recomienda
@@ -68,10 +69,10 @@ físico dañado, la combinación ddrescue +
 es la mejor opción para recuperar datos a partir de varias copias
 dañadas.
 <p>
-El logfile es salvado periódicamente en disco. De modo que en caso de
+El mapfile es salvado periódicamente en disco. De modo que en caso de
 bloqueo puede reanudarse el rescate sin apenas recopiado.
 <p>
-También el mismo logfile puede ser usado por múltiples comandos que copian
+También el mismo mapfile puede ser usado por múltiples comandos que copian
 diferentes áreas del fichero, y por múltiples intentos de rescate sobre
 diferentes subconjuntos de una misma área.
 <p>
@@ -86,8 +87,8 @@ soportado por el kernel (ATA, SATA, SCSI, antiguos discos MFM,
 disquetes, o incluso tarjetas de memoria como las SD).
 </p>
 
-<h4>Documentación</h4>
-
+<h2>Documentación</h2>
+<p>
 El manual está disponible en el <em>sistema info</em> del <em>Sistema
 Operativo GNU</em>. Emplea el comando <em>info</em> para acceder al
 directorio del sistema info. Emplea <em>info ddrescue</em> para acceder
@@ -97,8 +98,8 @@ Se puede acceder al manual de ddrescue desde
 <a href="manual/ddrescue_manual.html">aquí</a>.
 </p>
 
-<h4>Descargar (Download) ddrescue</h4>
-
+<h2>Descargar (Download) ddrescue</h2>
+<p>
 La última versión publicada de GNU ddrescue se puede encontrar en
 <a href="http://ftpmirror.gnu.org/ddrescue/">http://ftpmirror.gnu.org/ddrescue/</a>
 o en el subdirectorio <code>/gnu/ddrescue/</code> en tu
@@ -114,8 +115,8 @@ Puedes encontrar versiones antiguas y versiones beta para probar en
 http://download.savannah.gnu.org/releases/ddrescue/</a>.
 </p>
 
-<h4>Cómo Conseguir Ayuda</h4>
-
+<h2>Cómo Conseguir Ayuda</h2>
+<p>
 Para informar sobre errores (bugs) en ddrescue, la lista de correo
 <a href="mailto:bug-ddrescue@gnu.org"><em>bug-ddrescue@gnu.org</em></a>
 es el lugar más adecuado. Por favor, envía los mensajes como texto
@@ -128,8 +129,8 @@ Un archivo de la lista de correo está disponible en
 <em>http://lists.gnu.org/mailman/listinfo/bug-ddrescue</em></a>.
 </p>
 
-<h4>Cómo Ayudar</h4>
-
+<h2>Cómo Ayudar</h2>
+<p>
 Para contactar con el autor, tanto para informar sobre un error (bug)
 como para contribuir soluciones o mejoras, envía un mensaje a
 <a href="mailto:bug-ddrescue@gnu.org"><em>bug-ddrescue@gnu.org</em></a>.
@@ -141,12 +142,12 @@ También puedes visitar la
 <a href="https://savannah.gnu.org/projects/ddrescue/">página de ddrescue</a>
 en Savannah.
 <p>
-<a href="http://validator.w3.org/check?uri=referer"><img border="0"
-         src="http://www.w3.org/Icons/valid-html401"
-         alt="Valid HTML 4.01!" height="31" width="88"></a>
+<a href="http://validator.w3.org/check?uri=referer">
+Valid HTML 4.01 Strict</a>
 </p>
 
 <hr>
+<p>
 Esta página ha sido traducida por Sonia Díaz Pacheco.
 <p>
 Volver a la <a href="http://www.gnu.org/home.html">página principal de GNU</a>.
@@ -163,13 +164,13 @@ envía tus comentarios sobre las páginas de www.gnu.org en general a
 envía las demás cuestiones a
 <a href="mailto:gnu@gnu.org"><em>gnu@gnu.org</em></a>.
 <p>
-Copyright &copy; 2014 Free Software Foundation, Inc., 51 Franklin St, Fifth
+Copyright &copy; 2015 Free Software Foundation, Inc., 51 Franklin St, Fifth
 Floor, Boston, MA 02110-1301 USA
 <p>
 Se permite la copia literal y la distribución de este artículo en su
 totalidad a través de cualquier medio, siempre que se mantenga esta nota.
 <p>
-Updated: $Date: 2014/03/07 13:07:01 $ $Author: antonio $
+Updated: $Date: 2015/09/28 10:50:16 $ $Author: antonio $
 </p>
 <hr>
 </body>
