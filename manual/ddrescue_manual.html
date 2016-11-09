@@ -30,7 +30,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
 
 <h2 class="unnumbered">GNU ddrescue Manual</h2>
 
-<p>This manual is for GNU ddrescue (version 1.21, 17 March 2016).
+<p>This manual is for GNU ddrescue (version 1.21, 9 November 2016).
 
 <ul class="menu">
 <li><a accesskey="1" href="#Introduction">Introduction</a>:           Purpose and features of GNU ddrescue
@@ -864,7 +864,7 @@ Example 2: Rescue a CD-ROM in /dev/cdrom from two copies.
 
 </pre>
 Example 3: Rescue a CD-ROM in /dev/cdrom using two CD drives from two
-different computers, writing the image into an USB drive nounted on
+different computers, writing the image into an USB drive mounted on
 /mnt/mem.
 
 <pre class="example">     ddrescue -n -b2048 /dev/cdrom /mnt/mem/cdimage /mnt/mem/mapfile
@@ -1304,7 +1304,7 @@ Example 2: Rescue two ext2 partitions in /dev/hda to
 ddrescuelog. File system block size is 4096.<br>
 Note: you do need to partition /dev/hdb beforehand.
 
-<pre class="example">     fdisk /dev/hdb                                 &lt;-- partition /deb/hdb
+<pre class="example">     fdisk /dev/hdb                                 &lt;-- partition /dev/hdb
      ddrescue -f /dev/hda1 /dev/hdb1 mapfile1
      ddrescue -f /dev/hda2 /dev/hdb2 mapfile2
      ddrescuelog -l- -b4096 mapfile1 &gt; badblocks1
